@@ -44,6 +44,11 @@ const ub=s=>Uint8Array.from(atob(s.replace(/-/g,"+").replace(/_/g,"/")),c=>c.cha
 const bu=b=>btoa(String.fromCharCode(...b)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 const fmt=ms=>new Date(ms).toLocaleString(undefined,{dateStyle:"medium",timeStyle:"short"});
 let SIGN=null;
+// Same Firebase Realtime Database URL as KEYDB in index.html (shows whether a key has been used).
+const KEYDB="";
+const keyHash=async k=>bu(new Uint8Array(await crypto.subtle.digest("SHA-256",ub(k.replace(/^PY1-/,"")))));
+async function claimInfo(k){if(!KEYDB)return null;try{const h=await keyHash(k),r=await fetch(KEYDB.replace(/\/+$/,"")+"/claims/"+h+".json",{cache:"no-store"});if(!r.ok)throw 0;return{h,c:await r.json()}}catch(e){return{err:1}}}
+const claimTxt=i=>!i?"":i.err?"Couldn't check if this key was used.":i.c?"🔒 Used on a device since "+fmt(i.c.t)+" (database id "+i.h+")":"Not used yet — the first device that enters it will own it.";
 const HK="pyadmin_keys",hist=()=>{try{return JSON.parse(localStorage.getItem(HK)||"[]")}catch(e){return[]}},saveH=h=>{try{localStorage.setItem(HK,JSON.stringify(h))}catch(e){}};
 
 async function unlock(email,pw){
@@ -82,7 +87,7 @@ function mainView(){
    <div class="err" id="gx"></div><button class="btn p" id="gen" style="width:100%;margin-top:12px">Generate</button>
    <div id="new"></div></div>
   <div class="box"><div class="bar"><h2 style="margin:0">Generated keys</h2><span class="acts"><button class="btn s" id="hid">Hide expired</button><button class="btn s" id="clr">Clear expired</button></span></div><div id="list"></div>
-   <p class="warn">This list is stored only in this browser. Keys can't be revoked once given out: they work until they expire.</p></div>
+   <p class="warn">This list is stored only in this browser. Keys can't be revoked once given out: they work until they expire. ${KEYDB?"Each key works on one device only. To let someone move their key to a new device, delete its database id under <b>claims</b> in the Firebase console.":"<b>Single-device keys are off:</b> set KEYDB in index.html and admin.html to turn them on."}</p></div>
   <div class="box"><h2>Check a key</h2><input id="ck" placeholder="PY1-…" autocomplete="off"><div class="okm" id="cko"></div><div class="err" id="ckx"></div></div>`;
   $("#out").onclick=()=>{SIGN=null;loginView()};
   A.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{mode=b.dataset.m;A.querySelectorAll("[data-m]").forEach(x=>x.classList.toggle("on",x==b));$("#dur").hidden=mode!="dur";$("#dt").hidden=mode!="date";preview()});
@@ -105,9 +110,10 @@ async function generate(){
 
 let hideExp=false;
 const link=k=>new URL("index.html",location.href).href+"?key="+encodeURIComponent(k);
-const card=k=>{const on=k.exp>Date.now();return`<div class="key"><div class="meta"><span>${on?'<span class="tag on">Active</span>':'<span class="tag off">Expired</span>'} ${k.note?"<b>"+esc(k.note)+"</b>":""}</span><span class="mu">Expires ${esc(fmt(k.exp))}</span></div><code>${esc(k.key)}</code><div class="acts"><button class="btn s" data-copy="${esc(k.key)}">Copy key</button><button class="btn s" data-copy="${esc(link(k.key))}">Copy link</button></div></div>`};
+const card=k=>{const on=k.exp>Date.now();return`<div class="key"><div class="meta"><span>${on?'<span class="tag on">Active</span>':'<span class="tag off">Expired</span>'} ${k.note?"<b>"+esc(k.note)+"</b>":""}</span><span class="mu">Expires ${esc(fmt(k.exp))}</span></div><code>${esc(k.key)}</code>${KEYDB&&on?`<div class="mu" style="font-size:13px" data-claim="${esc(k.key)}">Checking use…</div>`:""}<div class="acts"><button class="btn s" data-copy="${esc(k.key)}">Copy key</button><button class="btn s" data-copy="${esc(link(k.key))}">Copy link</button></div></div>`};
 function list(){const h=hist().filter(k=>!hideExp||k.exp>Date.now());$("#hid").textContent=hideExp?"Show expired":"Hide expired";
-  $("#list").innerHTML=h.length?h.map(card).join(""):'<p class="mu">No keys yet.</p>'}
+  $("#list").innerHTML=h.length?h.map(card).join(""):'<p class="mu">No keys yet.</p>';fillClaims()}
+function fillClaims(){A.querySelectorAll("[data-claim]").forEach(async el=>{el.textContent=claimTxt(await claimInfo(el.dataset.claim))})}
 document.addEventListener("click",async e=>{const b=e.target.closest("[data-copy]");if(!b)return;
   try{await navigator.clipboard.writeText(b.dataset.copy);const t=b.textContent;b.textContent="Copied ✓";setTimeout(()=>b.textContent=t,1200)}catch(err){prompt("Copy:",b.dataset.copy)}});
 
@@ -117,7 +123,7 @@ async function check(){const v=$("#ck").value.trim();$("#cko").textContent="";$(
     const pk=await crypto.subtle.importKey("raw",ub(PUB),{name:"ECDSA",namedCurve:"P-256"},false,["verify"]);
     if(!await crypto.subtle.verify({name:"ECDSA",hash:"SHA-256"},pk,b.slice(9),b.slice(0,9)))throw 0;
     const exp=new DataView(b.buffer).getUint32(1)*1000;
-    if(exp>Date.now())$("#cko").textContent="Valid key — works until "+fmt(exp)+".";else $("#ckx").textContent="Genuine key, but it expired on "+fmt(exp)+"."}
+    if(exp>Date.now())$("#cko").textContent="Valid key — works until "+fmt(exp)+". "+claimTxt(await claimInfo(v));else $("#ckx").textContent="Genuine key, but it expired on "+fmt(exp)+"."}
   catch(e){$("#ckx").textContent="Not a valid key."}}
 loginView();
 </script></body></html>

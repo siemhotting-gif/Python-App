@@ -1369,6 +1369,25 @@ const ub64=s=>Uint8Array.from(atob(s.replace(/-/g,"+").replace(/_/g,"/")),c=>c.c
 async function verifyKey(k){try{const b=ub64(String(k).trim().replace(/^PY1-/i,""));if(b.length!=73||b[0]!=1)return 0;
   const pk=await crypto.subtle.importKey("raw",ub64(KEYPUB),{name:"ECDSA",namedCurve:"P-256"},false,["verify"]);
   return await crypto.subtle.verify({name:"ECDSA",hash:"SHA-256"},pk,b.slice(9),b.slice(0,9))?new DataView(b.buffer).getUint32(1)*1000:0}catch(e){return 0}}
+// ---- One device per key ----
+// The first browser that uses a key claims it in a shared database; every other device is refused.
+// The claiming browser keeps access until the key expires. Paste your Firebase Realtime Database URL
+// here (e.g. "https://my-project-default-rtdb.europe-west1.firebasedatabase.app") and use the rules in
+// firebase-rules.json. Leave it empty and keys work on any number of devices (old behaviour).
+const KEYDB="";
+const b64u=b=>btoa(String.fromCharCode(...b)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+function deviceId(){try{let d=localStorage.getItem("pydev");if(!d){d=b64u(crypto.getRandomValues(new Uint8Array(16)));localStorage.setItem("pydev",d)}return localStorage.getItem("pydev")===d?d:null}catch(e){return null}}
+const keyHash=async k=>b64u(new Uint8Array(await crypto.subtle.digest("SHA-256",ub64(String(k).trim().replace(/^PY1-/i,"")))));
+// Returns "ok" (this device owns the key), "taken" (another device used it) or "error" (couldn't check).
+async function claimKey(k){if(!KEYDB)return"ok";const me=deviceId();if(!me)return"nostore";
+  const u=KEYDB.replace(/\/+$/,"")+"/claims/"+await keyHash(k)+".json";
+  const read=async()=>{const r=await fetch(u,{cache:"no-store"});if(!r.ok)throw 0;return r.json()};
+  try{let c=await read();if(c)return c.d===me?"ok":"taken";
+    const w=await fetch(u,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({d:me,t:{".sv":"timestamp"}})});
+    if(w.ok)return"ok";c=await read();return c?(c.d===me?"ok":"taken"):"error"}catch(e){return"error"}}
+const claimMsg={taken:"This access key has already been used on another device. Each key works on one device only.",
+  error:"Couldn't check this access key. Check your internet connection and try again.",
+  nostore:"This browser blocks site storage (private mode?), so the key can't be linked to this device. Use a normal browser window."};
 const fmtD=ms=>new Date(ms).toLocaleString(undefined,{dateStyle:"medium",timeStyle:"short"});
 // Countdown + automatic kick-out when the key runs out
 const left=()=>{let t=Math.max(0,Math.ceil((KEYEXP-Date.now())/1000));const d=t/86400|0,h=t%86400/3600|0,m=t%3600/60|0,sec=t%60,p=n=>String(n).padStart(2,"0");
@@ -1382,7 +1401,7 @@ function keyTick(){if(!KEYEXP)return;if(Date.now()>=KEYEXP){const e=KEYEXP;if(au
 setInterval(keyTick,1000);document.addEventListener("visibilitychange",keyTick);
 function removeKey(){try{localStorage.removeItem("pykey")}catch(e){}KEYEXP=0;menu()}
 function logout(){try{localStorage.removeItem("pyuser")}catch(e){}menu()}
-function loginPage(what){$("#nav").innerHTML="";window.scrollTo(0,0);
+function loginPage(what,kerr){$("#nav").innerHTML="";window.scrollTo(0,0);
   A.innerHTML=`<form class="login" id="lf" novalidate><h1>🐍 Python Practice</h1><p class="mu">${what?`<b>${esc(what)}</b> is not part of the free version. `:""}Enter an access key or log in to unlock all modules. Module 2 is always free.</p>
   ${KEYEXP>Date.now()?`<div class="trnote">🔑 Your access key gives full access until <b>${esc(fmtD(KEYEXP))}</b> — <b data-kt>${left()}</b> left. <button class="btn" type="button" id="kr" style="min-height:34px;padding:2px 10px;font-size:13px;margin-top:6px">Remove key</button></div>`:""}
   <h2 style="margin-top:18px">Access key</h2>
@@ -1393,10 +1412,13 @@ function loginPage(what){$("#nav").innerHTML="";window.scrollTo(0,0);
   <label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password" required>
   <div class="lerr" id="lx" role="alert"></div><button class="btn p" type="submit">Log in</button><button class="ghost" type="button" id="lb">← Continue with the free version (Module 2)</button></form>`;
   $("#lb").onclick=menu;if($("#kr"))$("#kr").onclick=removeKey;
-  $("#lk").focus();
+  $("#lk").focus();if(kerr)$("#kx").textContent=kerr;
   const useKey=async()=>{const k=$("#lk").value.trim();if(!k){$("#kx").textContent="Paste your access key first.";return}
     const exp=await verifyKey(k);if(!exp){$("#kx").textContent="This access key is not valid.";return}
     if(exp<=Date.now()){$("#kx").textContent="This access key expired on "+fmtD(exp)+".";return}
+    const kb=$("#kb");kb.disabled=true;kb.textContent="Checking…";$("#kx").textContent="";
+    const c=await claimKey(k);kb.disabled=false;kb.textContent="Use access key";
+    if(c!="ok"){$("#kx").textContent=claimMsg[c];return}
     try{localStorage.setItem("pykey",k)}catch(e){}KEYEXP=exp;menu()};
   $("#kb").onclick=useKey;$("#lk").onkeydown=e=>{if(e.key=="Enter"){e.preventDefault();useKey()}};
   $("#lf").onsubmit=async e=>{e.preventDefault();const em=$("#le").value.trim().toLowerCase(),pw=$("#lp").value;
@@ -1406,9 +1428,16 @@ function loginPage(what){$("#nav").innerHTML="";window.scrollTo(0,0);
 G.forEach(a=>a.forEach(g=>{}));
 (async()=>{let q=null,st=null;try{q=new URLSearchParams(location.search).get("key");if(q)history.replaceState(null,"",location.pathname+location.hash)}catch(e){}
   try{st=localStorage.getItem("pykey")}catch(e){}
-  // The key is remembered in this browser (localStorage) until it expires or is removed.
-  const qe=q?await verifyKey(q):0;if(qe>Date.now()){KEYEXP=qe;try{localStorage.setItem("pykey",q)}catch(e){}return menu()}
-  const se=st?await verifyKey(st):0;if(se>Date.now()){KEYEXP=se;return menu()}
+  // The key is remembered in this browser (localStorage) until it expires or is removed,
+  // and it only works on the device that used it first (see claimKey).
+  const qe=q?await verifyKey(q):0;let qerr="";
+  if(qe>Date.now()){const c=await claimKey(q);if(c=="ok"){KEYEXP=qe;try{localStorage.setItem("pykey",q)}catch(e){}return menu()}qerr=claimMsg[c]}
+  const se=st?await verifyKey(st):0;
+  if(se>Date.now()){const c=await claimKey(st);
+    // Offline? This device already had the key, so let it keep working.
+    if(c!="taken"){KEYEXP=se;return qerr?loginPage("",qerr):menu()}
+    try{localStorage.removeItem("pykey")}catch(e){}return loginPage("",claimMsg.taken)}
+  if(qerr)return loginPage("",qerr);
   if(st)try{localStorage.removeItem("pykey")}catch(e){}
   const ex=Math.max(qe,se);if(ex&&!authed())return keyExpired(ex);
   menu()})();
