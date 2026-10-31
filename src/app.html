@@ -1351,26 +1351,14 @@ function pick(k){if(done)return;done=1;const ok=opts[k][1];
   $("#fb").innerHTML=`<div class="fb ${ok?"ok":"bad"}"><b>${ok?"Correct! ✓":"Wrong ✗ — the correct answer is "+"ABCD"[opts.findIndex(o=>o[1])]}</b>${esc(cur.why)}${syn(cur)}</div><button class="btn p" id="nx">Next question →</button>`;
   $("#nx").onclick=next;$("#nx").focus()}
 A.addEventListener("click",e=>{const b=e.target.closest("[data-l],[data-p]");if(!b)return;if(b.dataset.l!=null)lesson(+b.dataset.l);else go(+b.dataset.p)});document.addEventListener("keydown",e=>{const k="abcd".indexOf(e.key.toLowerCase());if(e.key.length==1&&k>-1&&$(".opt")&&!done)pick(k)});
-// ---- Login (client-side only; replace with a real backend before adding a paywall) ----
-const USERS={"siemhotting@gmail.com":"2a25cf07575237d5763a9befda6f50ef4af08533f3fb06970568a71dec717e4c"};
-const sha256=async t=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,"0")).join("");
-const getUser=()=>{try{return localStorage.getItem("pyuser")}catch(e){return null}};
-const authed=()=>{const u=getUser();return!!(u&&USERS[u])};
-const free=k=>authed()||TOP[k][0]==2;
-const lockCard=(k,a)=>`<button class="card lock" data-unlock="${esc(TOP[k][1])}" aria-label="${esc(TOP[k][1])} (locked, log in to unlock)"><b>🔒 ${TOP[k][1]}</b><small>Log in to unlock</small></button>`;
-const limBanner=()=>authed()?"":`<div class="lim"><p><b>🔒 Limited access</b><br>You're using the free version: only <b>Module 2</b> is available. Log in to unlock Modules 3–5, mixed practice across all topics and the practice exam.</p><button class="btn p" data-unlock="">Log in to unlock everything</button></div>`;
-document.addEventListener("click",e=>{const b=e.target.closest("[data-unlock]");if(b){e.stopPropagation();loginPage(b.dataset.unlock)}},true);
-function logout(){try{localStorage.removeItem("pyuser")}catch(e){}menu()}
-function loginPage(what){$("#nav").innerHTML="";window.scrollTo(0,0);
-  A.innerHTML=`<form class="login" id="lf" novalidate><h1>🐍 Python Practice</h1><p class="mu">${what?`<b>${esc(what)}</b> is not part of the free version. `:""}Log in to unlock all modules. Module 2 is always free.</p>
-  <label for="le">Email</label><input id="le" type="email" autocomplete="username" required>
-  <label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password" required>
-  <div class="lerr" id="lx" role="alert"></div><button class="btn p" type="submit">Log in</button><button class="ghost" type="button" id="lb">← Continue with the free version (Module 2)</button></form>`;
-  $("#lb").onclick=menu;
-  $("#le").focus();
-  $("#lf").onsubmit=async e=>{e.preventDefault();const em=$("#le").value.trim().toLowerCase(),pw=$("#lp").value;
-    if(!em||!pw){$("#lx").textContent="Enter your email and password.";return}
-    const h=USERS[em];if(h&&h===await sha256(pw)){try{localStorage.setItem("pyuser",em)}catch(e){}menu()}
-    else{$("#lx").textContent="Incorrect email or password.";$("#lp").value="";$("#lp").focus()}}}
+// ==== AUTH START (build.mjs swaps this block for src/free-auth.js in the free public page) ====
+// Paid version: only served by the backend to logged-in users who paid, shown inside a frame on the public page.
+const authed=()=>true;
+const free=k=>true;
+const lockCard=()=>"";
+const limBanner=()=>"";
+function loginPage(){menu()}
+function logout(){if(window.parent!==window)window.parent.postMessage({pyApp:"logout"},"*");else location.reload()}
+// ==== AUTH END ====
 G.forEach(a=>a.forEach(g=>{}));menu();
 </script></body></html>

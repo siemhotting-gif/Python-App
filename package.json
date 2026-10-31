@@ -1,0 +1,7 @@
+{
+  "name": "python-practice",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "node build.mjs" },
+  "devDependencies": { "acorn": "^8.14.0" }
+}

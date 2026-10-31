@@ -1,0 +1,11 @@
+project_id = "python-practice"
+
+# The functions check the user's login themselves, and Stripe's webhook has no Supabase token.
+[functions.create-checkout]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+[functions.app]
+verify_jwt = false

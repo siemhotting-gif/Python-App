@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#0f766e">
+<title>Python Practice: What is the output?</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f7f9;--card:#fff;--tx:#111827;--mu:#6b7280;--ln:#d1d5db;--ac:#0f766e;--ok:#047857;--okb:#d1fae5;--bad:#b91c1c;--badb:#fee2e2}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1318;--card:#1a2029;--tx:#e5e7eb;--mu:#9ca3af;--ln:#374151;--ac:#2dd4bf;--ok:#6ee7b7;--okb:#064e3b;--bad:#fca5a5;--badb:#7f1d1d}}
+:root[data-theme="dark"]{--bg:#0f1318;--card:#1a2029;--tx:#e5e7eb;--mu:#9ca3af;--ln:#374151;--ac:#2dd4bf;--ok:#6ee7b7;--okb:#064e3b;--bad:#fca5a5;--badb:#7f1d1d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:26px;margin:4px 0}h2{font-size:15px;color:var(--ac);text-transform:uppercase;letter-spacing:.05em;margin:26px 0 8px}
+.mu{color:var(--mu)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.card,.btn{background:var(--card);border:1px solid var(--ln);border-radius:12px;color:var(--tx);font:inherit}
+.card{padding:14px;text-align:left;cursor:pointer}.card:hover,.opt:hover:not(:disabled){border-color:var(--ac)}
+.card b{display:block}.card small{color:var(--mu)}
+.meter{height:7px;background:var(--ln);border-radius:4px;overflow:hidden;margin:8px 0 4px}.meter i{display:block;height:100%;background:var(--ac);transition:width .4s}
+.all{width:100%;margin-top:14px;background:var(--ac);color:#fff;border:0;font-weight:600;padding:14px}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.btn{padding:8px 14px;cursor:pointer}.btn.p{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600}
+.sc{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:8px 12px;margin-bottom:12px}
+.sc div{display:flex;justify-content:space-between;font-size:14px}
+.img{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:8px 0 14px}.img canvas{display:block}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;padding:12px;margin-bottom:8px;cursor:pointer}
+.opt .l{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--ln);display:grid;place-items:center;font-weight:700;font-size:14px}
+.opt pre{margin:0;white-space:pre-wrap;font:14px/1.45 ui-monospace,Menlo,Consolas,monospace;word-break:break-word}
+.opt.ok{background:var(--okb);border-color:var(--ok)}.opt.bad{background:var(--badb);border-color:var(--bad)}.opt:disabled{cursor:default;color:var(--tx)}
+.fb{border-radius:10px;padding:12px 14px;margin:12px 0}.fb.ok{background:var(--okb)}.fb.bad{background:var(--badb)}.fb b{display:block;margin-bottom:2px}.tabs{display:flex;gap:6px;margin-bottom:14px}.tab{flex:1;padding:10px;border:1px solid var(--ln);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;font-weight:600;cursor:pointer}.tab.on{background:var(--ac);color:#fff;border-color:var(--ac)}.adv{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:12px 14px;margin:14px 0}.ar{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--ln);flex-wrap:wrap}.ar .btn{padding:6px 10px;font-size:14px}.adv p{margin:6px 0}textarea{width:100%;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--card);color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:10px;margin-bottom:10px;resize:vertical}pre.code{margin:8px 0;padding:10px;background:#f3f4f6;color:#1f2937;border-radius:8px;overflow-x:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}.fb ul{margin:6px 0 0;padding-left:20px;font-size:14px}.fb li{margin:3px 0}.fb code{font:13px ui-monospace,Menlo,Consolas,monospace;background:rgba(127,127,127,.18);padding:0 4px;border-radius:4px}
+.rt{border:1px solid var(--ln);border-radius:10px;overflow:hidden;margin-bottom:14px}.rr{display:flex;gap:12px;padding:8px 10px;border-top:1px solid var(--ln);font-size:14px}.rr:first-child{border-top:0}.rr code{flex:0 0 42%;font:13px ui-monospace,Menlo,Consolas,monospace;word-break:break-word}.rr span{flex:1}@media(max-width:520px){.rr{flex-direction:column;gap:2px}.rr code{flex:none}}.ct{overflow-x:auto;margin:10px 0}.ct table{border-collapse:collapse;font-size:13px;min-width:600px}.ct th,.ct td{border:1px solid var(--ln);padding:5px 8px;text-align:left;vertical-align:top}.ct th{background:var(--card)}.ct tr.on td{background:var(--okb)}html{-webkit-text-size-adjust:100%}button,textarea{touch-action:manipulation}button{-webkit-tap-highlight-color:transparent}.btn,.tab{min-height:44px}textarea{font-size:16px}@media(max-width:560px){main{padding:14px 12px 32px}h1{font-size:22px}.grid{grid-template-columns:1fr}.opt{padding:14px 12px}.opt pre{font-size:15px}#nx,#sh,#sk,#ls{width:100%;margin:4px 0}.ar>div:last-child{width:100%;display:flex;gap:8px}.ar .btn{flex:1}.rec .btn,.adv .btn{min-height:40px}.img{margin-left:-4px;margin-right:-4px}.fb{padding:12px}}.nb{margin:12px 0 16px}.nbr{display:flex;gap:10px;align-items:flex-start}.nbl{flex:0 0 64px;font:12px ui-monospace,Menlo,Consolas,monospace;color:var(--ac);padding-top:12px;text-align:right}.nbout{color:#b45309}.nbc{flex:1;min-width:0;position:relative}.nbc .code{margin:0}.nbbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.nbbtns .btn{min-height:34px;padding:2px 12px;font-size:13px}.nbo .nbr{margin-top:6px}.nbres{flex:1;min-width:0;margin:0;padding:10px;background:var(--card);border:1px solid var(--ln);border-radius:8px;white-space:pre-wrap;word-break:break-word;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--tx)}.nb>p{margin:6px 0 0 74px;font-size:14px;color:var(--mu)}.nbbar{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 8px}@media(max-width:560px){.nbr{flex-direction:column;gap:0}.nbl{flex:none;text-align:left;padding-top:0;margin-bottom:2px}.nb>p{margin-left:0}.nbbtns .btn{flex:1}.tr{margin-left:0}}.tr{margin:8px 0 0 74px;border:1px solid var(--ac);border-radius:10px;padding:10px;background:var(--card)}.trh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.trb{display:flex;gap:6px}.trb .btn{min-height:34px;padding:2px 10px;font-size:13px}.trs{width:100%;margin:8px 0}.trcode{margin:0;padding:6px 0;background:#f3f4f6;color:#1f2937;border-radius:8px;overflow-x:auto;font:13px/1.55 ui-monospace,Menlo,Consolas,monospace}.tl{display:block;padding-right:10px;white-space:pre}.tl i{display:inline-block;width:2.2em;text-align:right;margin-right:10px;color:#9ca3af;font-style:normal}.tl.cur{background:#fde68a;font-weight:600}.trnote{margin:8px 0;padding:8px 10px;background:var(--okb);border-radius:8px;font-size:14px}.trst{font-size:13px;margin:6px 0}.chip{display:inline-block;padding:1px 8px;margin:2px 0;border:1px solid var(--ln);border-radius:10px;font:12px ui-monospace,Menlo,Consolas,monospace}.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}.trl{font-size:12px;margin-top:8px}.trv{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0}.var{border:1px solid var(--ln);border-radius:8px;padding:2px 8px;font-size:13px;background:var(--bg)}.var.ch{border-color:#d97706;background:#fef3c7;color:#111}.tr .nbres{margin:4px 0 0;min-height:1.6em}.xopt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;padding:12px;margin-bottom:8px;cursor:pointer}.xopt .l{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--ln);display:grid;place-items:center;font-weight:700;font-size:14px}.xopt pre,.xr pre{margin:0;white-space:pre-wrap;font:14px/1.45 ui-monospace,Menlo,Consolas,monospace;word-break:break-word}.xopt.sel{border-color:var(--ac);background:var(--okb)}.xopt.sel .l{background:var(--ac);color:#fff;border-color:var(--ac)}.exnav{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 12px}.exn{width:36px;height:36px;border:1px solid var(--ln);border-radius:8px;background:var(--card);color:var(--tx);font:inherit;font-size:13px;cursor:pointer}.exn.ans{background:var(--okb);border-color:var(--ok)}.exn.cur{outline:2px solid var(--ac)}.exb{display:flex;gap:8px;justify-content:space-between;margin:12px 0;flex-wrap:wrap}.exr{border:1px solid var(--ln);border-radius:10px;padding:10px 12px;margin:12px 0;background:var(--card)}.exr.ok{border-left:5px solid var(--ok)}.exr.bad{border-left:5px solid var(--bad)}.exr pre.code{margin:8px 0}.xr{display:flex;gap:10px;align-items:flex-start;padding:6px 8px;margin:4px 0;border-radius:8px;border:1px solid transparent}.xr .l{flex:none;width:24px;height:24px;border-radius:50%;border:1px solid var(--ln);display:grid;place-items:center;font-weight:700;font-size:12px}.xr em{margin-left:auto;font-size:12px;font-style:normal;color:var(--mu);white-space:nowrap}.xr.good{background:var(--okb);border-color:var(--ok)}.xr.mine{background:var(--badb);border-color:var(--bad)}.exr ul{font-size:14px;padding-left:20px}.exr code{font:13px ui-monospace,Menlo,Consolas,monospace;background:rgba(127,127,127,.18);padding:0 4px;border-radius:4px}@media(max-width:560px){.exb .btn{flex:1}}.login{max-width:380px;margin:8vh auto 0;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:24px 20px}.login h1{margin:0 0 4px}.login label{display:block;font-size:14px;font-weight:600;margin:14px 0 4px}.login input{width:100%;font:inherit;font-size:16px;padding:11px 12px;border:1px solid var(--ln);border-radius:10px;background:var(--bg);color:var(--tx)}.login input:focus{outline:2px solid var(--ac);border-color:var(--ac)}.login .btn.p{width:100%;margin-top:18px}.lerr{color:var(--bad);background:var(--badb);border-radius:8px;padding:8px 10px;margin-top:12px;font-size:14px}.lerr:empty{display:none}.tab.out{flex:0 0 auto;font-weight:500}.tab.lk{background:var(--card);color:var(--ac);border-color:var(--ac)}.lim{border:1px dashed var(--ac);border-radius:12px;padding:12px 14px;margin:14px 0;background:var(--card);display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.lim p{margin:0;flex:1 1 260px}.lim b{color:var(--ac)}.card.lock{opacity:.6;border-style:dashed}.card.lock small{color:var(--ac);font-weight:600}.btn.lock{opacity:.6;border:1px dashed var(--ac)!important}.ghost{background:none;border:0;color:var(--ac);font:inherit;cursor:pointer;padding:10px 0 0;width:100%;text-decoration:underline}</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head><body><main><div class="tabs" id="nav"></div><div id="app"></div></main>
+<script>
+const TOP=[[2,"If / else & logic"],[2,"Nested if"],[2,"Match (switch)"],[2,"For loops"],[2,"While loops"],[2,"Try-except"],[3,"Lists"],[3,"Dictionaries"],[3,"Tuples & sets"],[4,"Functions & lambda"],[4,"Scope, recursion & generators"]];
+const r=(a,b)=>a+Math.random()*(b-a+1)|0,pk=a=>a[r(0,a.length-1)],L=a=>"["+a.join(", ")+"]",B=b=>b?"True":"False",sum=a=>a.reduce((x,y)=>x+y,0);
+const S=s=>s.length?"{"+s.slice().sort((x,y)=>x-y).join(", ")+"}":"set()",tp=a=>"("+a.join(", ")+(a.length==1?",":"")+")";
+const uq=(n,lo,hi)=>{const s=[];while(s.length<n){const v=r(lo,hi);if(!s.includes(v))s.push(v)}return s};
+const R=m=>"{"+m.map(([k,v])=>`'${k}': ${v}`).join(", ")+"}",ev=(o,x,y)=>o=="+"?x+y:o=="*"?x*y:x-y;
+const G=[[ // 0 If / else & logic
+()=>{const a=r(14,30),b=r(5,22),k=r(2,9),v=a-k,w=v>b?"Win":"Try again";
+ return[`a = ${a}\nb = ${b}\na -= ${k}\nif a > b:\n    print("Win")\nelse:\n    print("Try again")`,w,["Win","Try again","Nothing is printed","Error"],`a becomes ${a} - ${k} = ${v}. ${v} > ${b} is ${B(v>b)}, so ${w} is printed.`]},
+()=>{const y=r(1,8),p=r(60,99),o=p>=90&&y>=5?"Bonus: 20%":p>=80&&y>=3?"Bonus: 10%":p>=70||y>=5?"Bonus: 5%":"No bonus";
+ return[`years = ${y}\nperformance = ${p}\nif performance >= 90 and years >= 5:\n    print("Bonus: 20%")\nelif performance >= 80 and years >= 3:\n    print("Bonus: 10%")\nelif performance >= 70 or years >= 5:\n    print("Bonus: 5%")\nelse:\n    print("No bonus")`,o,["Bonus: 20%","Bonus: 10%","Bonus: 5%","No bonus"],`Branches are checked from top to bottom and the first True one runs. With performance ${p} and ${y} years that is: ${o}.`]},
+()=>{const x=r(5,30),y0=r(2,9),k=r(1,3),y=y0+k,c1=x==y*2+5,c2=x%2==0,c3=y>x,a=c1||c2||c3;
+ return[`x = ${x}\ny = ${y0}\ny += ${k}\nprint("Accepted" if (x == y * 2 + 5 or x % 2 == 0) or y > x else "Rejected")`,a?"Accepted":"Rejected",["Accepted","Rejected","True","Error"],`y is ${y}. x == ${y*2+5} is ${B(c1)}, x % 2 == 0 is ${B(c2)}, y > x is ${B(c3)}. ${a?"At least one is True":"All three are False"}, so ${a?"Accepted":"Rejected"} is printed.`]}],[ // 1 Nested if
+()=>{const x0=r(8,20),y=r(3,10),z=r(10,20),x=Math.floor(x0/4)+3;let o;
+ if(x+y<z){o=z-x>9?x:z-y>6?y:z}else o=z-y+x;
+ return[`x = ${x0}\ny = ${y}\nz = ${z}\nx = x // 4 + 3\nif x + y < z:\n    if z - x > 9:\n        print(x)\n    elif z - y > 6:\n        print(y)\n    else:\n        print(z)\nelse:\n    print(z - y + x)`,""+o,[x,y,z,z-y+x,x+y].map(String),`x = ${x0} // 4 + 3 = ${x}. x + y = ${x+y} is ${x+y<z?"":"not "}less than z = ${z}, then the inner conditions pick ${o}.`]},
+()=>{const a=r(3,30),b=r(3,30);let o;if(a>b)o=a%2==0?a:a+b;else o=b%3==0?b:b-a;
+ return[`a = ${a}\nb = ${b}\nif a > b:\n    if a % 2 == 0:\n        print(a)\n    else:\n        print(a + b)\nelse:\n    if b % 3 == 0:\n        print(b)\n    else:\n        print(b - a)`,""+o,[a,b,a+b,Math.abs(b-a),b-a].map(String),`a > b is ${B(a>b)}, so the ${a>b?"first":"else"} block runs. ${a>b?`a % 2 == 0 is ${B(a%2==0)}`:`b % 3 == 0 is ${B(b%3==0)}`}, which gives ${o}.`]},
+()=>{const s=r(30,90),t=r(50,100),o=s>=50?(t>=80?"Pass+":"Pass"):(t>=80?"Retry":"Fail");
+ return[`score = ${s}\nattendance = ${t}\nif score >= 50:\n    if attendance >= 80:\n        print("Pass+")\n    else:\n        print("Pass")\nelse:\n    if attendance >= 80:\n        print("Retry")\n    else:\n        print("Fail")`,o,["Pass+","Pass","Retry","Fail"],`score >= 50 is ${B(s>=50)} and attendance >= 80 is ${B(t>=80)}, so ${o} is printed.`]}],[ // 2 Match
+()=>{const n=r(1,7),f=pk([true,false]),o=n<3?"Low":n<5&&f?"Mid":n==5?"High":"Other";
+ return[`n = ${n}\nok = ${B(f)}\nmatch n:\n    case 1 | 2:\n        print("Low")\n    case 3 | 4 if ok:\n        print("Mid")\n    case 5:\n        print("High")\n    case _:\n        print("Other")`,o,["Low","Mid","High","Other"],`n is ${n}${n==3||n==4?` and the guard ok is ${B(f)}`:""}, so ${o} is printed. Only the first matching case runs.`]},
+()=>{const x0=pk([20,30]),k=pk([0,10]),sc=r(30,90),x=x0+k,g=sc>=60,o=x==20?(g?"A":"B"):x==30?(g?"C":"D"):"D";
+ return[`x = ${x0}\nscore = ${sc}\nx += ${k}\nmatch x:\n    case 20 if score >= 60:\n        print("A")\n    case 20:\n        print("B")\n    case 30 if score >= 60:\n        print("C")\n    case _:\n        print("D")`,o,["A","B","C","D"],`x becomes ${x}. The guard score >= 60 is ${B(g)}. The first matching case is printed: ${o}.`]},
+()=>{const c=pk(["go","stop","wait"]),n=r(1,9),o=c=="go"?(n>5?"Fast":"Slow"):c=="stop"?"Halt":"Idle";
+ return[`cmd = "${c}"\nn = ${n}\nmatch cmd:\n    case "go" if n > 5:\n        print("Fast")\n    case "go":\n        print("Slow")\n    case "stop":\n        print("Halt")\n    case _:\n        print("Idle")`,o,["Fast","Slow","Halt","Idle"],`cmd is "${c}"${c=="go"?` and n > 5 is ${B(n>5)}`:""}, so ${o} is printed.`]}],[ // 3 For loops
+()=>{const a=r(1,6),b=a+r(5,9),st=r(1,3),m=r(2,3),l=[];for(let i=a;i<b;i+=st)l.push(i);const e=l.filter(n=>n%m==0),t=sum(e);
+ return[`total = 0\nfor n in range(${a}, ${b}, ${st}):\n    if n % ${m} == 0:\n        total += n\nprint(total)`,""+t,[t+m,sum(l),e.length,t-m,t+1].map(String),`range(${a}, ${b}, ${st}) gives ${l.join(", ")}. Multiples of ${m}: ${e.length?e.join(", "):"none"}. Their sum is ${t}.`]},
+()=>{const N=r(12,22),A=pk([4,5,6]),Bb=r(3,8),C=pk([2,3]);const f=(brk,cont)=>{const o=[];for(let i=1;i<N;i++){if(brk&&i%A==0&&i>Bb)break;if(cont&&i%C==0)continue;o.push(i)}return o.join(" ")},ans=f(1,1);
+ return[`for i in range(1, ${N}):\n    if i % ${A} == 0 and i > ${Bb}:\n        break\n    if i % ${C} == 0:\n        continue\n    print(i, end=" ")`,ans,[f(0,1),f(1,0),f(0,0),ans.split(" ").slice(0,-1).join(" ")],`Multiples of ${C} are skipped with continue. The loop stops (break) at the first multiple of ${A} above ${Bb}. Printed: ${ans}.`]},
+()=>{const n=r(2,3),m=r(3,4),op=pk(["<=","==",">"]),t=(i,j)=>op=="<="?i<=j:op=="=="?i==j:i>j,a=[],c=[],all=[];
+ for(let i=0;i<n;i++)for(let j=0;j<m;j++){const s=`(${i},${j})`;all.push(s);(t(i,j)?c:a).push(s)}
+ return[`for i in range(${n}):\n    for j in range(${m}):\n        if i ${op} j:\n            continue\n        print(f"({"{i}"},{"{j}"})", end=" ")`.replace(/\{"(\{[ij]\})"\}/g,"$1"),a.join(" "),[c.join(" "),all.join(" "),a.slice(0,-1).join(" ")],`Pairs where i ${op} j are skipped with continue. The pairs left are: ${a.join(" ")}.`]}],[ // 4 While loops
+()=>{const s=r(1,4),m=pk([3,4]),j=r(2,3),lim=r(9,12),sim=(s,m,j,lim,af)=>{let i=s,o=[],g=0;while(i<=lim&&g++<99){if(i%m==0){i+=j;continue}if(af){i++;o.push(i)}else{o.push(i);i++}}return o.join(" ")},af=pk([0,1]),ans=sim(s,m,j,lim,af);
+ return[`i = ${s}\nwhile i <= ${lim}:\n    if i % ${m} == 0:\n        i += ${j}\n        continue\n${af?`    i += 1\n    print(i, end=" ")`:`    print(i, end=" ")\n    i += 1`}`,ans,[sim(s,m,j,lim,1-af),sim(s,m,j+1,lim,af),sim(s,m,j,lim+1,af),sim(s,m,1,lim,af)],`Multiples of ${m} jump ahead by ${j} without printing; other values ${af?"are incremented first, then printed":"are printed, then incremented"}. Printed: ${ans||"nothing"}.`]},
+()=>{const n0=r(30,70),t=r(5,15),st=r(4,9);let n=n0,c=0;while(n>t){n-=st;c++}
+ return[`n = ${n0}\ncount = 0\nwhile n > ${t}:\n    n -= ${st}\n    count += 1\nprint(count, n)`,`${c} ${n}`,[`${c+1} ${n}`,`${c} ${n+st}`,`${c-1} ${n+st}`,`${c} ${n-st}`],`n goes from ${n0} down in steps of ${st} until it is no longer greater than ${t}. That takes ${c} rounds and leaves n = ${n}.`]},
+()=>{const x0=r(1,4),y0=r(1,3),Lm=r(5,7);let x=x0,y=y0,o=[];while(x<=Lm){y+=x+1;if(y%2==0)o.push(x+" "+y);x++}const a=o.concat([x+" "+y]).join(" ");
+ return[`x = ${x0}\ny = ${y0}\nwhile x <= ${Lm}:\n    y += x + 1\n    if y % 2 == 0:\n        print(x, y, end=" ")\n    x += 1\nprint(x, y)`,a,[o.concat([(x-1)+" "+y]).join(" "),(x+" "+y),o.join(" ")||"(nothing)",o.concat([x+" "+(y-1)]).join(" ")],`Each round y grows by x + 1 and x grows by 1. Pairs are printed only when y is even. After the loop x = ${x} and y = ${y}, printed last.`]}],[ // 5 Try-except
+()=>{const s=pk(["12","7a","3.5","40","x9","8","5b"]),k=r(2,5),ok=/^\d+$/.test(s),a=ok?`${s*k}\nDone`:"Bad\nDone";
+ return[`try:\n    n = int("${s}")\n    print(n * ${k})\nexcept ValueError:\n    print("Bad")\nprint("Done")`,a,["Bad\nDone",ok?`${s}\nDone`:`${(parseFloat(s)||5)*k}\nDone`,"Bad","The program crashes with an error"],`int("${s}") ${ok?"works, so the try block prints "+s*k:"raises ValueError, so the except block prints Bad"}. "Done" is printed afterwards because the error was handled.`]},
+()=>{const A=r(10,40),a=r(1,5),b=r(2,6),f=n=>n?Math.floor(A/n):-1;
+ return[`def f(n):\n    try:\n        return ${A} // n\n    except ZeroDivisionError:\n        return -1\n\nprint(f(${a}), f(0), f(${b}))`,`${f(a)} -1 ${f(b)}`,[`${f(a)} 0 ${f(b)}`,`${f(b)} -1 ${f(a)}`,`${f(a)} -1 ${f(b)+1}`,"The program crashes with an error"],`${A} // ${a} = ${f(a)}. ${A} // 0 raises ZeroDivisionError, which is caught, so -1 is returned. ${A} // ${b} = ${f(b)}.`]},
+()=>{const d=uq(4,1,9),i=r(0,6),a=i<4?`${d[i]}\nEnd`:"Out of range\nEnd";
+ return[`data = ${L(d)}\ntry:\n    print(data[${i}])\nexcept IndexError:\n    print("Out of range")\nfinally:\n    print("End")`,a,["Out of range\nEnd",`${d[i%4]}\nEnd`,`${d[(i+1)%4]}\nEnd`,"Out of range","The program crashes with an error"],`The list has 4 items (index 0 to 3). Index ${i} ${i<4?"exists and its value is printed":"does not exist, so IndexError is caught and Out of range is printed"}. The finally block always runs.`]}],[],[],[],[],[]];
+const X=[[()=>{const a=r(8,80),m=pk([true,false]),o=a<18||a>=65?"Discount":m&&a>30?"Member":"Full price";return[`age = ${a}\nmember = ${B(m)}\nif age < 18 or age >= 65:\n    print("Discount")\nelif member and age > 30:\n    print("Member")\nelse:\n    print("Full price")`,o,["Discount","Member","Full price","Nothing is printed"],`age < 18 or age >= 65 is ${B(a<18||a>=65)}; member and age > 30 is ${B(m&&a>30)}. The first True branch decides: ${o}.`]},
+()=>{const x=r(5,30),p=10<x&&x<=20,q=x%5==0&&x!=15,f=(u,v)=>`${B(u)} ${B(v)}`;return[`x = ${x}\nprint(10 < x <= 20, x % 5 == 0 and x != 15)`,f(p,q),[f(!p,q),f(p,!q),f(!p,!q)],`10 < x <= 20 means 10 < x and x <= 20: ${B(p)}. x % 5 == 0 is ${B(x%5==0)} and x != 15 is ${B(x!=15)}, so the second value is ${B(q)}.`]},
+()=>{const a=r(2,9),b=r(2,9),c=r(2,9),f=(u,v,w)=>`${u} ${v} ${B(w)}`,p=a+b*c,q=(a+b)*c;return[`a = ${a}\nb = ${b}\nc = ${c}\nprint(a + b * c, (a + b) * c, a + b * c > 20)`,f(p,q,p>20),[f(q,p,p>20),f(p,q,!(p>20)),f(p,p,p>20),f(q,q,q>20)],`* is done before +: ${a} + ${b} * ${c} = ${p}. Brackets first: (${a} + ${b}) * ${c} = ${q}. Then ${p} > 20 is ${B(p>20)}.`]},
+()=>{const s=r(60,95),b=r(0,8),t=s+b,o=t>=90?"A":t>=80?"B":t>=70?"C":"F";return[`score = ${s}\nscore += ${b}\nif score >= 90:\n    print("A")\nelif score >= 80:\n    print("B")\nelif score >= 70:\n    print("C")\nelse:\n    print("F")`,o,["A","B","C","F"],`score becomes ${s} + ${b} = ${t}. The first condition that is True decides: ${o}.`]}],[()=>{const a=r(1,9),b=r(1,9),c=r(1,9);let o;if(a>b){if(b>c)o="A";else o=a>c?"B":"C"}else o="D";return[`a = ${a}\nb = ${b}\nc = ${c}\nif a > b:\n    if b > c:\n        print("A")\n    else:\n        if a > c:\n            print("B")\n        else:\n            print("C")\nelse:\n    print("D")`,o,["A","B","C","D"],`a > b is ${B(a>b)}${a>b?`, b > c is ${B(b>c)}${b>c?"":`, a > c is ${B(a>c)}`}`:""}, so ${o} is printed.`]},
+()=>{const n=r(1,60),e=n%2==0,o=e?(n%3==0?"six":"even"):(n%5==0?"five":"odd");return[`n = ${n}\nif n % 2 == 0:\n    if n % 3 == 0:\n        r = "six"\n    else:\n        r = "even"\nelse:\n    if n % 5 == 0:\n        r = "five"\n    else:\n        r = "odd"\nprint(n, r)`,`${n} ${o}`,[`${n} six`,`${n} even`,`${n} five`,`${n} odd`],`${n} % 2 == 0 is ${B(e)}, then the inner test (${e?"% 3":"% 5"}) is ${B(e?n%3==0:n%5==0)}, so r = "${o}".`]},
+()=>{let x=r(1,12),y=r(1,12);const x0=x,y0=y;if(x>5){x-=3;if(x>y)y+=x;else y-=1}return[`x = ${x0}\ny = ${y0}\nif x > 5:\n    x -= 3\n    if x > y:\n        y += x\n    else:\n        y -= 1\nprint(x, y)`,`${x} ${y}`,[`${x0} ${y0}`,`${x} ${y0}`,`${x0-3} ${y}`,`${x} ${y+2}`],x0>5?`x > 5 is True, so x becomes ${x}. Then ${x} > ${y0} is ${B(x>y0)}, so y becomes ${y}.`:`x > 5 is False, so nothing changes.`]},
+()=>{const a=r(1,3),b=r(1,3),c=r(1,3);let o;if(a==b)o=b==c?"equilateral":"isosceles";else o=b==c||a==c?"isosceles":"scalene";return[`a = ${a}\nb = ${b}\nc = ${c}\nif a == b:\n    if b == c:\n        print("equilateral")\n    else:\n        print("isosceles")\nelse:\n    if b == c or a == c:\n        print("isosceles")\n    else:\n        print("scalene")`,o,["equilateral","isosceles","scalene","Nothing is printed"],`With sides ${a}, ${b}, ${c}: a == b is ${B(a==b)}, so the ${a==b?"first":"else"} block decides: ${o}.`]}],[()=>{const x=r(0,2),y=r(0,2),o=x==0&&y==0?"origin":x==0?"y-axis":y==0?"x-axis":"plane";return[`p = (${x}, ${y})\nmatch p:\n    case (0, 0):\n        print("origin")\n    case (0, _):\n        print("y-axis")\n    case (_, 0):\n        print("x-axis")\n    case _:\n        print("plane")`,o,["origin","y-axis","x-axis","plane"],`The tuple (${x}, ${y}) is compared with each pattern in order; _ matches any value. First match: ${o}.`]},
+()=>{const d=pk(["sat","sun","mon","fri","wed"]),o=d=="sat"||d=="sun"?"weekend":d=="fri"?"almost":"weekday";return[`day = "${d}"\nmatch day:\n    case "sat" | "sun":\n        print("weekend")\n    case "fri":\n        print("almost")\n    case _:\n        print("weekday")`,o,["weekend","almost","weekday","Nothing is printed"],`"|" means "or" inside a case. "${d}" gives ${o}; case _ catches everything else.`]},
+()=>{const n=r(-3,9),o=n<0?"neg":n==0?"zero":n%2==0?`even ${n}`:`odd ${n}`;return[`n = ${n}\nmatch n:\n    case x if x < 0:\n        print("neg")\n    case 0:\n        print("zero")\n    case x if x % 2 == 0:\n        print("even", x)\n    case _:\n        print("odd", n)`,o,["neg","zero",`even ${n}`,`odd ${n}`,`even ${n+1}`],`A name like x captures the value ${n}; the guard after "if" must also be True. First match: ${o}.`]},
+()=>{const a=r(0,3),b=r(0,3),o=a==0?"starts 0":a==b?"same":""+(a+b);return[`data = [${a}, ${b}]\nmatch data:\n    case [0, _]:\n        print("starts 0")\n    case [x, y] if x == y:\n        print("same")\n    case [x, y]:\n        print(x + y)`,o,["starts 0","same",""+(a+b),""+(a-b),""+(a*b)],`A list pattern matches a list of the same length. [${a}, ${b}] ${a==0?"matches [0, _]":a==b?"has x == y":"falls through to the last case, which prints x + y"}: ${o}.`]}],[()=>{const w=pk(["python","banana","coding","loops","queue","iteration"]),n=[...w].filter(c=>"aeiou".includes(c)).length;return[`word = "${w}"\ncount = 0\nfor ch in word:\n    if ch in "aeiou":\n        count += 1\nprint(count)`,""+n,[n+1,Math.max(0,n-1),w.length,w.length-n].map(String),`The loop visits each letter of "${w}". ${n} of them are in "aeiou", so count = ${n}.`]},
+()=>{const l=uq(4,1,8).concat(9),t=r(2,6),ix=l.map((v,i)=>v>t?i:-1).filter(i=>i>=0);return[`a = ${L(l)}\nfor i, v in enumerate(a):\n    if v > ${t}:\n        print(i, end=" ")`,ix.join(" "),[l.filter(v=>v>t).join(" "),ix.map(i=>i+1).join(" "),l.map((v,i)=>v<=t?i:-1).filter(i=>i>=0).join(" "),ix.slice(1).join(" ")||"0"],`enumerate gives (index, value) pairs. The values greater than ${t} sit at indexes ${ix.join(", ")}.`]},
+()=>{const n=r(3,6),k=r(2,n);let p=1;for(let i=1;i<=n;i++){if(i==k)continue;p*=i}return[`result = 1\nfor i in range(1, ${n+1}):\n    if i == ${k}:\n        continue\n    result *= i\nprint(result)`,""+p,[p*k,p/k,p+k,p*k*k].map(x=>String(Math.round(x))),`The loop multiplies 1 to ${n} but skips ${k} (continue), so the result is ${p}.`]},
+()=>{const a=r(3,7),c=a*(a-1)/2;return[`count = 0\nfor i in range(${a}):\n    for j in range(i):\n        count += 1\nprint(count)`,""+c,[c+a,c-a+1,a*a,c+1].map(String),`The inner loop runs i times for i = 0 to ${a-1}: ${Array.from({length:a},(_,i)=>i).join(" + ")} = ${c}.`]}],[()=>{const n0=r(100,999);let n=n0,t=0;while(n>0){t+=n%10;n=Math.floor(n/10)}return[`n = ${n0}\ntotal = 0\nwhile n > 0:\n    total += n % 10\n    n //= 10\nprint(total)`,""+t,[n0%10,t+1,t-1,Math.floor(n0/10)].map(String),`n % 10 is the last digit and n //= 10 removes it. The digits of ${n0} add up to ${t}.`]},
+()=>{const s=r(3,8),Lm=r(20,50),v=(Math.floor(Lm/s)+1)*s;return[`i = 0\nwhile True:\n    i += ${s}\n    if i > ${Lm}:\n        break\nprint(i)`,""+v,[v-s,v+s,Lm,Lm+1].map(String),`while True repeats until break. i grows by ${s} and the first value above ${Lm} is ${v}.`]},
+()=>{const a=r(1,5),T=r(30,200);let x=a,s=0;while(x<T){x*=2;s++}return[`x = ${a}\nsteps = 0\nwhile x < ${T}:\n    x *= 2\n    steps += 1\nprint(x, steps)`,`${x} ${s}`,[`${x/2} ${s-1}`,`${x*2} ${s+1}`,`${x} ${s-1}`,`${x/2} ${s}`],`x doubles each round (${a}, ${a*2}, ...) until it is at least ${T}. That takes ${s} rounds and x = ${x}.`]},
+()=>{const l=uq(4,1,9);l[r(0,3)]=2*r(1,4);const o=[...l].reverse().filter(v=>v%2==0).join(" ");return[`stack = ${L(l)}\nwhile stack:\n    v = stack.pop()\n    if v % 2 == 0:\n        print(v, end=" ")`,o,[l.filter(v=>v%2==0).join(" "),[...l].reverse().filter(v=>v%2).join(" "),[...l].reverse().join(" ")],`pop() removes the last item each round, so the list is read from the back. "while stack" stops when it is empty. Even values, back to front: ${o}.`]}],[()=>{const k=pk(["a","b","c"]),d={a:r(1,9),b:r(1,9)},ok=k in d;return[`d = {"a": ${d.a}, "b": ${d.b}}\ntry:\n    print(d["${k}"])\nexcept KeyError:\n    print("missing")\nelse:\n    print("found")`,ok?`${d[k]}\nfound`:"missing",[`${d.a}\nfound`,"missing","found",`${d.b}\nfound`,"missing\nfound"],`${ok?"The key exists, so the try block prints its value and the else block (it only runs without an error) prints found":"The key is not in the dictionary, so KeyError is raised and caught: missing"}.`]},
+()=>{const x=pk([0,2,5,"a"]),o=x===0?"zero":x==="a"?"type":""+Math.floor(10/x);return[`x = ${typeof x=="string"?`"${x}"`:x}\ntry:\n    print(10 // x)\nexcept ZeroDivisionError:\n    print("zero")\nexcept TypeError:\n    print("type")\nfinally:\n    print("end")`,o+"\nend",["zero\nend","type\nend",Math.floor(10/(+x||3))+"\nend","zero","The program crashes with an error"],`${x===0?"10 // 0 raises ZeroDivisionError":x==="a"?'10 // "a" raises TypeError':"10 // "+x+" = "+o+" without an error"}. finally always runs, so end is printed last.`]},
+()=>{const v=r(-3,5);return[`def check(a):\n    if a < 0:\n        raise ValueError("neg")\n    return a * 2\n\ntry:\n    print(check(${v}))\nexcept ValueError as e:\n    print("Error:", e)`,v<0?"Error: neg":""+v*2,["Error: neg",""+v*2,""+(v*2+1),"The program crashes with an error","neg"],v<0?'raise ValueError("neg") stops the function; except catches it and e holds the message: Error: neg.':`No error is raised, so ${v} * 2 = ${v*2} is printed.`]},
+()=>{const pool=["4","x","7","y","10","z"],it=Array.from({length:4},()=>pk(pool));let t=0;for(const s of it)t+=/^\d+$/.test(s)?+s:-1;return[`items = [${it.map(s=>`"${s}"`).join(", ")}]\ntotal = 0\nfor s in items:\n    try:\n        total += int(s)\n    except ValueError:\n        total -= 1\nprint(total)`,""+t,[t+1,t-1,t+2,sum(it.filter(s=>/^\d/.test(s)).map(Number))].map(String),`Numbers are added; each item that is not a number raises ValueError and subtracts 1 instead. Total: ${t}.`]}],[],[],[],[],[]];
+X.forEach((a,t)=>G[t].push(...a));
+TOP.push([4,"Files"]);
+const CL=["red","blue","green","pink","gold","gray","teal","navy","plum"];
+G.push([]);
+const GL=[
+[/\belif\b/,"elif","is checked only when all earlier conditions were False. The first True branch runs and the rest are skipped."],
+[/\b(and|or|not)\b/,"and / or / not","and needs both conditions to be True, or needs at least one, not flips True and False. not is done first, then and, then or."],
+[null,"in / not in","tests membership: True if the value is inside a string, list, tuple, set or the keys of a dictionary.",(c,l)=>l.some(x=>!/\bfor\b/.test(x)&&/\b(not in|in)\b/.test(x))],
+[/==|!=|<=|>=/,"== != <= >=","compare two values and give True or False (= assigns, == compares). A chain like 10 < x <= 20 means 10 < x and x <= 20. For sets, a <= b means subset."],
+[null,"A if cond else B","is a one-line if/else: it gives A when cond is True and B otherwise.",(c,l)=>l.some(x=>/\S.* if .* else /.test(x)&&!/^\s*(if|elif)\b/.test(x))],
+[null,"if x: (no comparison)","uses the value itself as the condition: 0, \"\", [], {}, () and None count as False, everything else as True.",(c,l)=>l.some(x=>/^\s*(if|elif|while)\s+(not\s+)?(?!True\b)[\w.]+\s*:/.test(x))],
+[/^(if|elif|else)\b[^\n]*:\n(?:[ ]+\S[^\n]*\n)*?[ ]+if /m,"nested if","is an if inside another if or else. The inner condition is only checked when the outer branch is entered; the indentation shows what belongs where."],
+[/\bmatch\b/,"match value:","compares the value with each case from top to bottom. The first matching case runs and then the match is finished. case _ is the default and matches anything."],
+[/\bcase\b[^\n]*\|/,"case a | b","matches when the value equals a or b."],
+[/\bcase\b[^\n]* if /,"case x if condition","is a guard: the pattern must match and the extra condition must also be True. A name like x captures the matched value."],
+[/\bcase\s*[\(\[\{]/,"case (x, y) / [x, y] / {\"k\": v}","are patterns for tuples, lists and dictionaries: _ matches any value, names capture values and a dictionary pattern checks that the keys exist."],
+[/\bwhile\b/,"while condition:","repeats the block as long as the condition is True. It is checked before every round, so something inside the loop must change it, or the loop never ends. while True needs a break."],
+[/\bbreak\b/,"break","leaves the loop immediately."],
+[/\bcontinue\b/,"continue","skips the rest of this round and jumps to the next one."],
+[/[-+*]=|\/\/=/,"+= -= *= //=","change a variable in place: x += 1 means x = x + 1 (the same for the other operators)."],
+[/\benumerate\(/,"enumerate(items)","gives (index, item) pairs, so you get the position and the value in one loop."],
+[/\bzip\(/,"zip(a, b)","pairs up the items of two sequences: first with first, second with second, and so on."],
+[/^\s*\w+, \w+(, \w+)* = /m,"a, b = x, y","assigns several names at once. The right side is calculated first with the old values, so a, b = b, a + b updates both safely."],
+[/\*\w+\s*=|,\s*\*\w+\s*=/,"first, *rest = items","unpacking: the first value goes to first and * collects all remaining values in a list."],
+[null,"else (after except)","runs only when the try block finished without an error.",(c,l)=>/\btry:/.test(c)&&/^\s*else:/m.test(c)],
+[/\bfinally:/,"finally","always runs: with an error, without an error, even after a return."],
+[/\braise\b/,"raise","creates an error yourself, e.g. raise ValueError(\"msg\"). It stops the code like a normal error unless an except block catches it."],
+[/\b(ValueError|ZeroDivisionError|KeyError|IndexError|TypeError)\b/,"error types","ValueError: wrong value, e.g. int(\"a\"). ZeroDivisionError: dividing by 0. KeyError: a dictionary key that does not exist. IndexError: index out of range. TypeError: wrong type, e.g. 10 // \"a\"."],
+[/\w\[(?!0\]|-1\])-?\d+\]/,"a[i]","is the item at position i; counting starts at 0 and negative numbers count from the end."],
+[null,"a[start:stop:step]","is a slice: the items from start up to (not including) stop. Negative numbers count from the end, a[::-1] reverses and a[::2] takes every second item.",(c,l)=>[...c.matchAll(/\w\[([^\]\n]*:[^\]\n]*)\]/g)].some(m=>m[1]!==":-1"&&m[1]!=="1:")],
+[/\]\[/,"m[row][col]","the first index picks the inner list (or dictionary), the second picks the item inside it."],
+[/\.sort\(/,"a.sort()","sorts the list itself (in place) and returns None. sorted(a) gives a new sorted list and leaves a unchanged."],
+[/\.reverse\(\)/,"a.reverse()","reverses the list in place."],
+[/\.extend\(/,"a.extend(items)","adds every item of another list to the end (append would add the whole list as one item)."],
+[/\.insert\(/,"a.insert(i, v)","puts v at position i; the items after it move one place up."],
+[null,"a.remove(v)","removes the first item equal to v from a list (ValueError if it is not there).",(c,l)=>l.some(x=>/\.remove\(/.test(x)&&!/os\.remove/.test(x))],
+[/\.(index|count)\(/,"a.index(v) / a.count(v)","index gives the position of the first v (error if it is missing), count tells how often v occurs. They work on lists, tuples and strings."],
+[/\.copy\(\)/,"a.copy()","makes a separate shallow copy. b = a only gives the same list a second name."],
+[/\.pop\([^)]/,"x.pop(i) / d.pop(key)","remove the item at index i / the key and give back what was removed."],
+[/\[[^\]\n]* for [^\]\n]* in [^\]\n]*\]/,"[expr for x in items if cond]","is a list comprehension: it builds a new list from the items; the optional if keeps only the items that match."],
+[/\.join\(/,"text.join(items)","glues a list of strings into one string, with the text before the dot between them."],
+[null,"{key: value}","is a dictionary: it stores pairs, and d[key] looks up the value for a key.",(c,l)=>/\{[^{}\n]*["'\w]+\s*:\s*[^{}\n]+\}/.test(c)&&!/\bcase\b/.test(c)],
+[/\w\[\s*["'][^"'\]]*["']\s*\]/,"d[\"key\"]","reads or writes the value stored under that key. A missing key gives a KeyError (d.get(key) avoids that)."],
+[/\.get\(/,"d.get(key, default)","returns the value for key, or the default (None if you give none) when the key is missing, so it never raises an error."],
+[/\.update\(/,"d.update(other)","adds the pairs of another dictionary; existing keys get the new value. (For a set, update adds many items.)"],
+[/\.(items|values|keys)\(\)/,"d.items() / d.values() / d.keys()","give the (key, value) pairs, the values and the keys. A loop over a dictionary itself gives the keys."],
+[/\.popitem\(/,"d.popitem()","removes and returns the last inserted (key, value) pair."],
+[{test:c=>/\bdel\s+\w+\[/.test(c)},"del x[i]","removes that item or dictionary key."],
+[/\{[^}\n]* for [^}\n]* in /,"{k: v for ... in ...}","is a dictionary comprehension (a set comprehension has no colon). The optional if filters the items."],
+[/\bkey = /,"key = function","tells sorted, min or max what to compare: key = len compares lengths, key = d.get compares the values of a dictionary."],
+[/\bset\(/,"set(x)","makes a set: only unique values, no order and no indexing. set(a_list) removes duplicates; the empty set is set(), because {} is a dictionary."],
+[{test:c=>/\.add\(/.test(c)&&!/def add\(/.test(c)},"s.add(v)","adds v to a set (nothing happens if it is already there)."],
+[/\.discard\(/,"s.discard(v)","removes v from a set if it is there, without an error if it is not (remove(v) would raise a KeyError)."],
+[/ [&^] |[a-z_]\w* \| [a-z_]/,"a | b, a & b, a - b, a ^ b","set operations: union (all items), intersection (items in both), difference (only in a) and symmetric difference (in exactly one of them)."],
+[/\.(union|intersection|difference|symmetric_difference|isdisjoint|issubset|issuperset)\(/,"set methods","union, intersection, difference and symmetric_difference do the same as | & - ^. isdisjoint(b) is True when nothing is shared, issubset(b) (a <= b) when every item of a is in b."],
+[/\.(startswith|endswith)\(/,"text.startswith(p) / endswith(s)","True if the text begins / ends with that part."],
+[/\.(lower|upper)\(\)/,"text.lower() / text.upper()","give a copy of the text in lower / upper case; the original does not change."],
+[/\.isdigit\(\)/,"text.isdigit()","True if the text consists only of digits."],
+[/\bf"/,"f\"...\"","is an f-string: parts in {braces} are replaced by their values, e.g. f\"({i},{j})\" gives (0,1)."],
+[/\binput\(/,"input(prompt)","asks the user to type something and always returns it as a string; convert it with int() or float() when you need a number."],
+[/\bNone\b/,"None","is the value that means nothing; a function without return gives None."],
+[/\babs\(/,"abs(x)","gives the absolute value (without the minus sign)."],
+[/\bimport\b/,"import","makes a module available, e.g. import os for working with files."],
+
+[/def \w+\(/,"def name(...):","defines a function. The indented block is its body and only runs when the function is called."],
+[/def \w+\([^)]*\w = /,"x = value in the parameters","gives the parameter a default value, used when the caller leaves that argument out."],
+[null,"f(y = 3)","is a keyword argument: the value is passed by parameter name, so the other parameters keep their defaults.",(c,l)=>l.some(x=>!/^\s*def /.test(x)&&/\w\([^)]*\b(?!end\b)\w+ = [^=]/.test(x))],
+[/\*args/,"*args","collects any number of positional arguments into a tuple."],
+[/\*\*kw/,"**kw","collects keyword arguments (a = 1, ...) into a dictionary."],
+[/\breturn\b/,"return","hands a value back to the caller and ends the function. Several values (return a, b) come back as a tuple."],
+[/return lambda/,"return lambda ...","the function returns a small function (a closure) that remembers the n of the call that created it."],
+[/lambda/,"lambda a: expr","is a short anonymous function: it takes a and returns expr."],
+[/\bmap\(/,"map(f, items)","applies f to every item and gives the results."],
+[/\bfilter\(/,"filter(f, items)","keeps only the items for which f returns True."],
+[/\blist\(/,"list(...)","turns a lazy result (map, filter, generator) into a real list."],
+[/\bsorted\(/,"sorted(items, key = ...)","returns a new sorted list; key says what to sort by."],
+[/\b(min|max)\(/,"min() / max()","give the smallest / largest value."],
+[/\bsum\(/,"sum()","adds up all numbers in a collection."],
+[/\blen\(/,"len()","gives the number of items."],
+[/def (\w+)\([^\n]*\n(?:[ \t]+\S[^\n]*\n|\n)*?[ \t]+(?:[^\n]*[^.\w])?\1\(/,"a function calling itself","is recursion. The base case (the first if with a return) stops it; every other call works on a smaller problem."],
+[/\[:-1\]/,"a[:-1]","is a copy without the last item."],[/\[1:\]/,"a[1:]","is a copy without the first item."],[/\w\[-1\]/,"a[-1]","is the last item."],[/\w\[0\]/,"a[0]","is the first item."],
+[/\bnonlocal\b/,"nonlocal x","makes the inner function assign to x of the enclosing function instead of creating a new local x."],
+[/\bglobal\b/,"global x","makes the function assign to the module-level x."],
+[/\byield\b/,"yield","turns the function into a generator: it pauses at each yield, hands out one value and continues from there at the next call."],
+[/\bnext\(/,"next(g)","resumes the generator until its next yield and returns that value."],
+[/= \(.* for \w+ in /,"(expr for x in ...)","is a generator expression: like a list comprehension, but it produces values one at a time."],
+[/\brange\(/,"range()","produces a sequence of numbers (range(n) is 0 to n-1)."],
+[/\bfor\b/,"for x in ...:","repeats the indented block for every item."],
+[/\bif\b/,"if / else","runs a block only when the condition is True; else runs when it is False."],
+[/ % /,"%","gives the remainder of a division."],[/ \/\/ /,"//","is floor division: divides and rounds down."],
+[/end=" "/,'end=" "',"prints a space after the value instead of a new line."],
+[/\.append\(/,"append()","adds an item at the end of the list."],[/\.pop\(/,"pop()","removes and returns the last item."],
+[/\bprint\(/,"print()","shows the value on screen."],
+[/\bopen\(/,"open(name, mode)",'opens a file: "r" read (default), "w" write (erases old content), "a" append (keeps old content).'],
+[/\bwith open/,"with ... as f:","closes the file automatically when the block ends."],
+[/\.write\(/,"f.write(text)","writes text to the file. It adds no newline by itself."],
+[/\.read\(\)/,"f.read()","reads the rest of the file as one string."],
+[/\.readline\(\)/,"f.readline()","reads one line and moves the position to the next line."],
+[/\.readlines\(\)/,"f.readlines()","reads all lines into a list."],
+[/for line in f/,"for line in f","goes through the file one line at a time."],
+[/\.strip\(\)/,"strip()","removes whitespace and newlines at both ends."],[/\.split\(\)/,"split()","cuts a string into a list of words."],
+[/\bint\(/,"int()","converts text to a whole number."],[/\bstr\(/,"str()","converts a number to text."],
+[/os\.remove/,"os.remove(name)","deletes a file."],[/os\.path\.exists/,"os.path.exists(name)","is True if the file exists."],
+[/\btry:/,"try / except","runs the try block; if the named error occurs (FileNotFoundError: the file does not exist), the except block runs instead."]
+];
+const LOWP=new Set(["print()","if / else","for x in ...:","range()","len()","sum()","%","//",'end=" "',"return","int()","str()"]);
+const syn=c=>{const l=c.code.split("\n"),m=GL.filter(g=>g[3]?g[3](c.code,l):g[0].test(c.code)),h=m.filter(g=>!LOWP.has(g[1])).concat(m.filter(g=>LOWP.has(g[1]))).slice(0,12).map(g=>`<li><code>${esc(g[1])}</code> ${esc(g[2])}</li>`);return h.length?`<br><br><b>What the syntax and methods in this question do</b><ul>${h.join("")}</ul>`:""};
+const Y=[[()=>{const n=r(1,20),p=n%2==0,q=n>10,f=(a,b,c)=>`${B(a)} ${B(b)} ${B(c)}`;return[`n = ${n}\nprint(n % 2 == 0 or n > 10, n % 2 == 0 and n > 10, not n > 10)`,f(p||q,p&&q,!q),[f(p&&q,p||q,!q),f(p||q,p&&q,q),f(!(p||q),p&&q,!q),f(p||q,!(p&&q),!q)],`n % 2 == 0 is ${B(p)} and n > 10 is ${B(q)}. "or" needs one True, "and" needs both, "not" flips the value.`]},
+()=>{const w=pk(["python","pear","plum","loops","pineapple","fig","pancake"]),a=w.startsWith("p"),b=w.length>4,o=a&&b?"A":a?"B":b?"C":"D";return[`name = "${w}"\nif name.startswith("p") and len(name) > 4:\n    print("A")\nelif name.startswith("p"):\n    print("B")\nelif len(name) > 4:\n    print("C")\nelse:\n    print("D")`,o,["A","B","C","D"],`"${w}" starts with p: ${B(a)}; longer than 4 letters: ${B(b)}. The first matching branch prints ${o}.`]},
+()=>{const v=pk(["0","5",'""','"hi"',"[]","[0]","None"]),f=["0",'""',"[]","None"].includes(v),o=f?"no":"yes";return[`x = ${v}\nif x:\n    print("yes")\nelse:\n    print("no")`,o,["yes","no","True","False"],`0, "", [] and None count as False in an if; other values count as True. ${v} is ${f?"falsy":"truthy"}, so ${o}.`]}],[()=>{let p=r(20,90);const p0=p,m=pk([true,false]);if(p>50)p-=m?10:5;else if(m)p-=2;return[`price = ${p0}\nmember = ${B(m)}\nif price > 50:\n    if member:\n        price -= 10\n    else:\n        price -= 5\nelse:\n    if member:\n        price -= 2\nprint(price)`,""+p,[p0,p0-10,p0-5,p0-2].map(String),`price > 50 is ${B(p0>50)} and member is ${B(m)}, so the price goes from ${p0} to ${p}.`]},
+()=>{const y=r(1990,2030),l=y%4==0&&(y%100!=0||y%400==0),o=l?"leap":"no";return[`year = ${y}\nif year % 4 == 0:\n    if year % 100 == 0:\n        if year % 400 == 0:\n            print("leap")\n        else:\n            print("no")\n    else:\n        print("leap")\nelse:\n    print("no")`,o,["leap","no","Leap year","Error"],`${y} % 4 is ${y%4}${y%4==0?`, % 100 is ${y%100}${y%100==0?`, % 400 is ${y%400}`:""}`:""}, so the answer is ${o}.`]},
+()=>{const[a,b,c]=uq(3,1,30),s=[a,b,c].sort((x,y)=>x-y);return[`a = ${a}\nb = ${b}\nc = ${c}\nif a > b:\n    if a > c:\n        print(a)\n    else:\n        print(c)\nelse:\n    if b > c:\n        print(b)\n    else:\n        print(c)`,""+s[2],[s[0],s[1],a+b+c-s[2],s[2]+1].map(String),`The nested comparisons find the largest of ${a}, ${b} and ${c}: ${s[2]}.`]}],[()=>{const c=pk(["START","Stop","pause","STOP","go"]),l=c.toLowerCase(),o=l=="start"?"Running":l=="stop"?"Stopped":"Unknown";return[`cmd = "${c}"\nmatch cmd.lower():\n    case "start":\n        print("Running")\n    case "stop":\n        print("Stopped")\n    case _:\n        print("Unknown")`,o,["Running","Stopped","Unknown","Nothing is printed"],`cmd.lower() turns "${c}" into "${l}", and that value is matched against the cases: ${o}.`]},
+()=>{const s=r(40,100),o=s>=90?"A":s>=75?"B":"C";return[`score = ${s}\nmatch score:\n    case n if n >= 90:\n        print("A")\n    case n if n >= 75:\n        print("B")\n    case _:\n        print("C")`,o,["A","B","C","Nothing is printed"],`n captures the score ${s}. The first guard that is True decides: ${o}.`]},
+()=>{const k=pk(["circle","square","triangle"]),v=r(2,6),o=k=="circle"?"round":k=="square"?""+v*v:"unknown";return[`data = {"kind": "${k}", "val": ${v}}\nmatch data:\n    case {"kind": "circle"}:\n        print("round")\n    case {"kind": "square", "val": x}:\n        print(x * x)\n    case _:\n        print("unknown")`,o,["round",""+v*v,"unknown",""+v*2],`A dictionary pattern checks that the keys exist with the given values; "val": x also captures the value. Kind "${k}" gives ${o}.`]}],[()=>{const a=r(10,20),c=r(2,4),b=r(0,3),o=[];for(let i=a;i>b;i-=c)o.push(i);return[`for i in range(${a}, ${b}, -${c}):\n    print(i, end=" ")`,o.join(" "),[o.slice().reverse().join(" "),[...o,o[o.length-1]-c].join(" "),o.slice(0,-1).join(" "),Array.from({length:o.length},(_,i)=>a-i).join(" ")],`range(${a}, ${b}, -${c}) counts down from ${a} in steps of ${c} and stops before ${b}: ${o.join(", ")}.`]},
+()=>{const w=pk(["python","coding","banana","loops"]),c=pk([...w]),s=[...w].filter(x=>x!=c).reverse().join("");return[`word = "${w}"\ns = ""\nfor ch in word:\n    if ch != "${c}":\n        s = ch + s\nprint(s)`,s,[[...w].filter(x=>x!=c).join(""),[...w].reverse().join(""),w.replace(c,""),s+"x"],`Each kept letter is put in front of s, so the order is reversed. The letter "${c}" is skipped. Result: ${s}.`]},
+()=>{const a=r(3,5),b=r(3,5);let t=0;for(let i=1;i<=a;i++)for(let j=1;j<=b;j++)if(i!=j)t+=i*j;const sa=a*(a+1)/2,sb=b*(b+1)/2;return[`total = 0\nfor i in range(1, ${a+1}):\n    for j in range(1, ${b+1}):\n        if i != j:\n            total += i * j\nprint(total)`,""+t,[t+1,sa*sb,t-1,t+a].map(String),`All products i * j for i in 1..${a} and j in 1..${b}, except the pairs where i == j, add up to ${t}. (${sa*sb} would include the skipped pairs.)`]}],[()=>{const n0=r(3,12);let n=n0,s=0;while(n!=1){n=n%2==0?n/2:3*n+1;s++}return[`n = ${n0}\nsteps = 0\nwhile n != 1:\n    if n % 2 == 0:\n        n //= 2\n    else:\n        n = 3 * n + 1\n    steps += 1\nprint(steps)`,""+s,[s+1,s-1,s+2,n0].map(String),`Even numbers are halved, odd numbers become 3n + 1, until n is 1. Starting at ${n0} that takes ${s} steps.`]},
+()=>{const x=r(12,60),y=r(8,40),g=(a,b)=>b?g(b,a%b):a;return[`a, b = ${x}, ${y}\nwhile b != 0:\n    a, b = b, a % b\nprint(a)`,""+g(x,y),[x%y,Math.min(x,y),1,x*y/g(x,y)].map(String),`The loop replaces (a, b) by (b, a % b) until b is 0. The last a is the greatest common divisor of ${x} and ${y}: ${g(x,y)}.`]},
+()=>{const d=Array.from({length:5},()=>r(1,9)),z=r(1,4);d[z]=0;let t=0,i=0;while(i<5&&d[i]!=0){t+=d[i];i++}return[`data = ${L(d)}\ni = 0\ntotal = 0\nwhile i < len(data) and data[i] != 0:\n    total += data[i]\n    i += 1\nprint(total, i)`,`${t} ${i}`,[`${t} ${i+1}`,`${sum(d)} 5`,`${t} ${i-1}`,`${t+1} ${i+1}`],`The loop stops at the first 0 (index ${i}). The numbers before it add up to ${t} and i is ${i}.`]}],[()=>{const s=pk(["2","3","4","6","x","0","y"]),ok=/^\d+$/.test(s),o=!ok?"not a number":+s==0?"zero":""+Math.floor(12/s);return[`try:\n    n = int("${s}")\n    r = 12 // n\nexcept ValueError:\n    print("not a number")\nexcept ZeroDivisionError:\n    print("zero")\nelse:\n    print(r)`,o,["not a number","zero",""+(ok&&+s?Math.floor(12/s):3),"The program crashes with an error"],!ok?`int("${s}") raises ValueError, so the first except block runs.`:+s==0?"12 // 0 raises ZeroDivisionError, so the second except block runs.":`No error occurs, so the else block prints 12 // ${s} = ${o}.`]},
+()=>{const it=Array.from({length:4},()=>pk(["1","a","3","b","5","7"]));it[0]=pk(["1","3","5","7"]);const o=it.filter(s=>/^\d+$/.test(s));return[`for s in [${it.map(x=>`"${x}"`).join(", ")}]:\n    try:\n        n = int(s)\n    except ValueError:\n        continue\n    print(n, end=" ")`,o.join(" "),[it.join(" "),o.slice(0,-1).join(" ")||"0",it.filter(s=>!/^\d+$/.test(s)).join(" ")||"a",o.concat(["0"]).join(" ")],`continue skips to the next item when int() fails. Only the numbers are printed: ${o.join(" ")}.`]},
+()=>{const x=pk([0,2,5]),v=x?""+Math.floor(10/x):"zero";return[`def f(x):\n    try:\n        return 10 // x\n    except ZeroDivisionError:\n        return "zero"\n    finally:\n        print("fin")\n\nprint(f(${x}))`,`fin\n${v}`,[`${v}\nfin`,v,"fin",`fin\n${x?"zero":"10"}`],`finally runs before the function hands back its value, so fin is printed first. Then print shows the returned ${v}.`]}],[],[],[],[],[],[]];
+Y.forEach((a,t)=>G[t].push(...a));
+const OPEN=[[0,`Ask for the number of books a student already borrowed and whether they are a member (Yes/No). Print "Invalid input" for wrong input, "You can borrow N more books" for a member with fewer than 5 books, "Borrowing limit reached" for 5 or more books, otherwise "Membership required".`,`borrowed = input("Enter the number of books you already borrowed:")
+member = input("Are you a member? (Yes/No):").strip().lower()
+
+if not borrowed.isdigit() or member not in ("yes", "no"):
+    print("Invalid input")
+elif member == "yes" and int(borrowed) < 5:
+    print("You can borrow", 5 - int(borrowed), "more books")
+elif int(borrowed) >= 5:
+    print("Borrowing limit reached")
+else:
+    print("Membership required")`],[0,`Ask for a score between 0 and 100 and print the grade: A for 90 or more, B for 80 or more, C for 70 or more, otherwise F.`,`score = int(input("Score: "))
+if score >= 90:
+    print("A")
+elif score >= 80:
+    print("B")
+elif score >= 70:
+    print("C")
+else:
+    print("F")`],[0,`Ask for a number and print whether it is positive, negative or zero, and whether it is even or odd.`,`n = int(input("Number: "))
+if n > 0:
+    print("positive")
+elif n < 0:
+    print("negative")
+else:
+    print("zero")
+if n % 2 == 0:
+    print("even")
+else:
+    print("odd")`],[1,`Ask for a year and print whether it is a leap year (divisible by 4, except centuries unless divisible by 400). Use nested if statements.`,`year = int(input("Year: "))
+if year % 4 == 0:
+    if year % 100 == 0:
+        if year % 400 == 0:
+            print("leap year")
+        else:
+            print("not a leap year")
+    else:
+        print("leap year")
+else:
+    print("not a leap year")`],[1,`Ask for a username and a password. If the username is "admin" and the password is "1234" print "Welcome", if the username is "admin" but the password is wrong print "Wrong password", otherwise print "Unknown user". Use a nested if.`,`user = input("Username: ")
+password = input("Password: ")
+if user == "admin":
+    if password == "1234":
+        print("Welcome")
+    else:
+        print("Wrong password")
+else:
+    print("Unknown user")`],[2,`Ask for a ticket choice (1 to 4) and whether the person is a student (yes/no). Use match: choice 1 for a student prints "Student discount applied", 1 or 2 prints "You selected a standard ticket", 3 or 4 prints "You selected a premium ticket", anything else prints "Invalid ticket choice".`,`choice = input("Enter ticket choice (1-4):").strip()
+student = input("Are you a student? (yes/no): ").strip().lower()
+
+match choice:
+    case "1" if student == "yes":
+        print("Student discount applied")
+    case "1" | "2":
+        print("You selected a standard ticket")
+    case "3" | "4":
+        print("You selected a premium ticket")
+    case _:
+        print("Invalid ticket choice")`],[2,`Ask for a day number from 1 to 7 and use match to print the name of the day (1 = Monday). Print "Invalid day" for anything else.`,`day = int(input("Day number: "))
+match day:
+    case 1:
+        print("Monday")
+    case 2:
+        print("Tuesday")
+    case 3:
+        print("Wednesday")
+    case 4:
+        print("Thursday")
+    case 5:
+        print("Friday")
+    case 6 | 7:
+        print("Weekend")
+    case _:
+        print("Invalid day")`],[3,`Store 12, 5, 27, 8 and 19 in a list and find the largest number with a for loop (without using max). Print "Largest: ..." .`,`numbers = [12, 5, 27, 8, 19]
+
+largest = numbers[0]
+for number in numbers:
+    if number > largest:
+        largest = number
+
+print("Largest:", largest)`],[3,`Ask the user for 10 numbers, count how many of them are odd and print "Total odd numbers: ...".`,`odd_count = 0
+
+for i in range(10):
+    number = int(input("Enter a number: "))
+    if number % 2 != 0:
+        odd_count += 1
+
+print("Total odd numbers:", odd_count)`],[3,`Ask for a number n and print its multiplication table from 1 to 10, one line per row, like "3 x 4 = 12".`,`n = int(input("Number: "))
+for i in range(1, 11):
+    print(n, "x", i, "=", n * i)`],[4,`Keep asking for numbers until the user enters 0. Count the odd numbers and print "Total odd numbers: ...". Use a while loop.`,`odd_count = 0
+
+number = int(input("Enter a number (0 to stop): "))
+while number != 0:
+    if number % 2 != 0:
+        odd_count += 1
+    number = int(input("Enter a number (0 to stop): "))
+
+print("Total odd numbers:", odd_count)`],[4,`Make a guessing game: the secret number is 7. Keep asking for a guess until it is right, then print how many tries it took.`,`secret = 7
+tries = 0
+guess = 0
+while guess != secret:
+    guess = int(input("Guess: "))
+    tries += 1
+print("Correct! Tries:", tries)`],[5,`Keep asking the user for a whole number until the input is valid. Use try/except to catch the error, then print the number doubled.`,`while True:
+    text = input("Enter a whole number: ")
+    try:
+        number = int(text)
+        break
+    except ValueError:
+        print("That is not a whole number, try again.")
+print(number * 2)`],[5,`Write a function safe_divide(a, b) that returns a / b, or None when b is 0. Use try/except.`,`def safe_divide(a, b):
+    try:
+        return a / b
+    except ZeroDivisionError:
+        return None
+
+print(safe_divide(10, 4))
+print(safe_divide(1, 0))`]];
+let sinceOpen=0,onlyOpen=false;const seenO=new Set();
+function pickOpen(t){const ok=i=>(t==null?free(OPEN[i][0]):OPEN[i][0]==t);let c=OPEN.map((o,i)=>i).filter(i=>ok(i)&&!seenO.has(i));if(!c.length){OPEN.forEach((o,i)=>seenO.delete(i));c=OPEN.map((o,i)=>i).filter(ok)}if(!c.length)return null;const i=pk(c);seenO.add(i);return OPEN[i]}
+function showOpen(o){const[t,task,sol]=o;n++;
+  A.innerHTML=`<div class="bar"><button class="btn" id="m">← Menu</button><span class="mu">${TOP[t][1]} · question ${n} · open question</span></div>
+  <div class="sc"><b>Open question</b> <span class="mu">— not scored. Write your own code, then compare it with an example.</span></div>
+  <p><b>${esc(task)}</b></p><textarea id="ta" spellcheck="false" rows="9" placeholder="# write your code here"></textarea>
+  <div><button class="btn p" id="sh">Show example solution</button> <button class="btn" id="sk">Skip →</button></div><div id="ex"></div>`;
+  $("#m").onclick=menu;$("#sk").onclick=next;
+  $("#ta").onkeydown=e=>{if(e.key=="Tab"){e.preventDefault();const a=e.target;a.setRangeText("    ",a.selectionStart,a.selectionEnd,"end")}};
+  $("#sh").onclick=()=>{$("#sh").disabled=true;$("#ex").innerHTML=`<div class="fb ok"><b>One possible solution</b>Yours can look different and still be correct.<pre class="code">${esc(sol)}</pre>${syn({t,code:sol})}</div><button class="btn p" id="nx">Next question →</button>`;$("#nx").onclick=next;$("#nx").focus()}}
+const LES=[[`An if statement runs a block of code only when a condition is True. Conditions are built with comparison operators (==, !=, <, >, <=, >=) and combined with the logical operators and, or, not.`,[
+[`if x > 5:
+    print("big")
+elif x > 2:
+    print("medium")
+else:
+    print("small")`,`Python checks the conditions from top to bottom and runs only the first block whose condition is True. else runs when none matched. The indentation (4 spaces) defines the block.`],
+[`a and b   # True only if both are True
+a or b    # True if at least one is True
+not a     # flips True and False`,`and / or / not combine conditions. not is evaluated first, then and, then or. Use brackets to be sure: (a or b) and c.`],
+[`10 < x <= 20                      # chained comparison
+print("yes" if x > 5 else "no")   # one-line if`,`Python allows chained comparisons. The one-line form "value_if_true if condition else value_if_false" is a conditional expression.`],
+[`x = 0
+if x:
+    print("yes")
+else:
+    print("no")    # prints no`,`Truthiness: 0, "", [] and None count as False in an if; all other values count as True.`],
+[`x = 15
+x % 2 == 0    # False: % gives the remainder
+x // 4        # 3: // divides and rounds down`,`% (remainder) is often used to test even/odd or divisibility. // is floor division.`]],
+[`Use == to compare and = to assign.`,`Put the most specific condition first in an elif chain.`,`x -= 3 means x = x - 3: follow the variable changes line by line.`]],[`A nested if is an if statement inside another if (or else) block. The inner condition is only checked when the outer condition allowed that block to run.`,[
+[`if age >= 18:
+    if member:
+        print("member price")
+    else:
+        print("normal price")
+else:
+    print("too young")`,`The inner if/else only runs when age >= 18 is True. Each else belongs to the if at the same indentation.`],
+[`if a > b:
+    if a > c:
+        print(a)
+    else:
+        print(c)`,`To trace it: write down the value of every variable, evaluate the outer condition, then go into that block only.`],
+[`if a > 0:
+    if b > 0:
+        print("both")
+# is the same as
+if a > 0 and b > 0:
+    print("both")`,`A nested if without an inner else equals one if with "and". Use nesting when the inner part needs its own else.`]],
+[`Count the indentation to see which else belongs to which if.`,`Variables can change inside a block (x -= 3), which affects later conditions.`,`Only one path through the nested structure runs.`]],[`match compares one value with a series of case patterns, from top to bottom. The first matching case runs and the others are skipped. case _ is the wildcard that matches everything (like else).`,[
+[`match day:
+    case "sat" | "sun":
+        print("weekend")
+    case "fri":
+        print("almost")
+    case _:
+        print("weekday")`,`The | sign means "or". There is no fall-through: only the first matching case runs.`],
+[`match n:
+    case x if x < 0:
+        print("negative")
+    case 0:
+        print("zero")
+    case _:
+        print("positive")`,`A guard is an extra if after the pattern. A name like x captures the value; the case only matches when the guard is also True.`],
+[`match p:
+    case (0, 0):
+        print("origin")
+    case (0, _):
+        print("on the y-axis")`,`Patterns can match tuples and lists by their structure. _ matches any single value.`],
+[`match data:
+    case {"kind": "square", "val": x}:
+        print(x * x)`,`Dictionary patterns check that the keys exist (with the given values) and can capture the other values.`]],
+[`Order matters: a general case above a specific one hides it.`,`A case whose guard is False is skipped and matching continues.`,`match cmd.lower(): matches on the result of the expression.`]],[`A for loop repeats a block once for every item of a sequence (a range, list, string, dictionary...). The loop variable takes the next item each round.`,[
+[`range(5)          # 0 1 2 3 4
+range(2, 7)        # 2 3 4 5 6
+range(10, 0, -3)   # 10 7 4 1`,`range(start, stop, step): stop is NOT included. A negative step counts down.`],
+[`for ch in "abc":
+    print(ch, end=" ")    # a b c
+for i, v in enumerate([5, 6]):
+    print(i, v)           # 0 5 and 1 6`,`Strings and lists can be looped over directly. enumerate gives (index, value) pairs. end=" " prints a space instead of a new line.`],
+[`for i in range(1, 10):
+    if i % 3 == 0:
+        continue    # skip this round
+    if i > 6:
+        break       # leave the loop
+    print(i)`,`continue jumps to the next round; break stops the whole loop.`],
+[`for i in range(3):
+    for j in range(2):
+        print(i, j)`,`Nested loops: the inner loop runs completely for every round of the outer loop (3 x 2 = 6 prints).`],
+[`total = 0
+for n in [4, 6]:
+    total += n     # accumulate
+print(total)       # 10`,`A common pattern: start a variable before the loop, update it inside, use it after the loop.`]],
+[`range(1, 5) stops at 4.`,`Indentation decides which lines are inside the loop.`,`With nested loops, write out the (i, j) pairs one by one.`]],[`A while loop repeats as long as its condition is True. Something inside the loop must change so that the condition eventually becomes False, otherwise it never stops.`,[
+[`n = 3
+while n > 0:
+    print(n)
+    n -= 1`,`The condition is checked before each round. This prints 3, 2, 1.`],
+[`while True:
+    text = input("Number: ")
+    if text.isdigit():
+        break`,`while True with break: loop forever until a condition inside the loop says stop (handy for input validation).`],
+[`i = 3
+while i <= 10:
+    if i % 3 == 0:
+        i += 2
+        continue
+    i += 1`,`continue jumps back to the condition check; the lines below it are skipped in that round. Make sure i still changes before continue!`],
+[`n = 345
+total = 0
+while n > 0:
+    total += n % 10    # last digit
+    n //= 10           # remove it
+print(total)           # 12`,`A typical use: work through a number or a list until nothing is left.`]],
+[`Trace with a table: one row per round, one column per variable.`,`Check whether a print happens before or after the variable changes.`,`A forgotten update (i += 1) causes an infinite loop.`]],[`try/except handles errors (exceptions) without crashing the program. Code that might fail goes in the try block; the except block runs if that specific error occurs.`,[
+[`try:
+    n = int("12a")
+    print("OK")
+except ValueError:
+    print("Bad")
+print("Done")`,`int("12a") raises ValueError, so the rest of the try block is skipped and except runs. The program then continues with Done.`],
+[`try:
+    print(10 // x)
+except ZeroDivisionError:
+    print("zero")
+except TypeError:
+    print("type")`,`Several except blocks can handle different errors; the first one that fits runs.`],
+[`try:
+    value = d[key]
+except KeyError:
+    print("missing")
+else:
+    print("found")
+finally:
+    print("always")`,`else runs only when no error happened. finally always runs, even with a return or an uncaught error.`],
+[`def check(a):
+    if a < 0:
+        raise ValueError("neg")
+    return a
+
+try:
+    check(-1)
+except ValueError as e:
+    print(e)    # neg`,`raise creates an error yourself. "as e" gives you the error object (its message).`]],
+[`Common errors: ValueError, ZeroDivisionError, TypeError, KeyError, IndexError, FileNotFoundError.`,`Only the lines in try after the failing line are skipped.`,`In a loop, continue inside the except block moves on to the next item.`]],["",[],[]],["",[],[]],["",[],[]],["",[],[]],["",[],[]],["",[],[]]];
+const REFD=[`
+if cond: ... :: run the block only when cond is True
+elif cond: ... :: extra condition, only checked if the earlier ones were False
+else: ... :: runs when none of the conditions was True
+== != < > <= >= :: comparison, the result is True or False
+a < x <= b :: chained comparison (same as a < x and x <= b)
+and / or / not :: both True / at least one True / flips the value. Order: not, and, or
+x in seq / x not in seq :: membership test for strings, lists, tuples, sets and dict keys
+x is None / x is not None :: identity test, mostly used with None
+A if cond else B :: one-line conditional expression
+bool(x) :: truthiness: 0, 0.0, "", [], (), {}, set() and None are False, everything else is True
+x % 2 == 0 :: even number test (remainder of the division by 2)
+isinstance(x, int) :: True if x has that type
+text.isdigit() / text.isalpha() :: True if the text only has digits / only letters
+text.lower() / text.upper() / text.strip() :: clean up text before comparing it
+text.startswith("p") / text.endswith("s") :: check the beginning / end of a text
+`,`
+if a: (if b: ...) :: the inner if only runs when a was True
+else (inside) :: belongs to the if at the same indentation
+indentation :: 4 spaces per level; it decides which block a line belongs to
+if a and b: :: replaces a nested if when there is no else in between
+x = x // 4 + 3 :: lines before the if may change values, trace them first
+pass :: placeholder for an empty block
+// and % :: floor division and remainder, used a lot in conditions
+min(a, b, c) / max(a, b, c) :: smallest / largest of several values
+abs(x) :: absolute value
+print(...) in a branch :: only the branch that is entered prints; trace one path at a time
+`,`
+match value: :: start a match statement on one value
+case 1: :: matches when value == 1
+case 1 | 2: :: matches 1 or 2
+case _: :: wildcard, matches anything (the default)
+case x: :: capture pattern: matches anything and stores it in x
+case n if n > 5: :: guard: the pattern must match and the condition must be True
+case "a": :: string literal pattern
+case (x, y): :: tuple pattern (lists work too: [x, y])
+case [first, *rest]: :: sequence pattern, * collects the rest
+case {"k": v}: :: mapping pattern: key "k" must exist, its value is stored in v
+case 0 | 1 if cond: :: or-pattern combined with a guard
+only the first matching case runs :: there is no break and no fall-through
+cmd.lower() :: match on a cleaned value, e.g. match cmd.lower():
+`,`
+for x in seq: :: loop over each item of a list, tuple, set, string, dict (keys), range or file
+range(stop) :: 0 up to stop - 1
+range(start, stop) :: start up to stop - 1
+range(start, stop, step) :: step can be negative to count down
+range(len(a)) :: the indexes of a list a
+enumerate(seq) :: (index, item) pairs; enumerate(seq, start = 1) counts from 1
+zip(a, b) :: loop over two sequences at once as pairs
+reversed(seq) / sorted(seq) :: loop backwards / in sorted order
+break :: leave the loop immediately
+continue :: skip to the next round
+for ... else: :: the else block runs if the loop was not ended by break
+print(x, end = " ") :: print without a new line (end = "" prints nothing in between)
+total += x :: accumulator pattern; count += 1 is a counter
+for i in range(n): for j in range(i): :: nested loops, the inner loop restarts every round
+sum(), len(), min(), max() :: shortcuts for common loops
+result = ch + result :: building a text in reverse, one letter at a time
+`,`
+while cond: :: repeat as long as cond is True
+while True: ... break :: loop until a break happens
+break :: leave the loop
+continue :: jump back to the condition check (update variables first!)
+while ... else: :: else runs when the condition became False (not after break)
+i += 1 / i -= 1 :: counter update; forgetting it gives an infinite loop
+while stack: :: a non-empty list counts as True, so it loops until it is empty
+stack.pop() :: remove and return the last item of a list, often used in while loops
+x //= 10 and x % 10 :: remove / read the last digit of a number
+a, b = b, a % b :: swap in one line (used for the greatest common divisor)
+input() in a loop :: ask again until the input is valid
+count, total = 0, 0 :: set up counters before the loop
+while i < len(data) and data[i] != 0: :: stop at the end of the list or at a special value
+`,`
+try: ... :: code that may raise an error
+except ValueError: :: runs if that error type occurs
+except (A, B): :: one block for several error types
+except Exception as e: :: catch (almost) any error and read its message through e
+else: :: runs only if the try block had no error
+finally: :: always runs, with or without an error (even after a return)
+raise ValueError("msg") :: raise an error yourself
+ValueError :: wrong value, e.g. int("abc")
+ZeroDivisionError :: division or modulo by zero
+TypeError :: wrong type, e.g. 1 + "a" or 10 // "a"
+KeyError :: a dictionary key does not exist
+IndexError :: list index out of range
+FileNotFoundError :: the file does not exist
+NameError :: a variable name is not defined
+continue / break inside try :: skip an item / stop a loop when an error happens
+int(text) :: raises ValueError when the text is not a whole number
+`,"","","","","",""];
+const refTable=k=>`<h2>Reference: syntax &amp; methods</h2><p class="mu">Everything you need for the exercises on this topic. Left: the syntax, right: what it does.</p><div class="rt">${(REFD[k]||"").trim().split("\n").map(l=>l.split(" :: ")).map(([a,b])=>`<div class="rr"><code>${esc(a)}</code><span>${esc(b)}</span></div>`).join("")}</div>`;
+const GLO=[["Iterable:","you can loop over it with for. All containers below are iterable."],["Ordered:","the items keep the position you gave them, so an index like a[0] works. (A dictionary keeps its insertion order, but you look items up by key, not by position.)"],["Changeable (mutable):","you can add, remove or change items after creating it. Immutable means you cannot; a change creates a new object instead."],["Duplicates:","whether the same value may appear more than once."],["Hashable:","needed for set items and dictionary keys. Numbers, strings and tuples of those are; lists, sets and dictionaries are not."]];
+const CT=[["list","[1, 2, 3]","Yes","Yes","Yes","Yes","Yes","A collection that changes"],["tuple","(1, 2, 3)","Yes","No","Yes","Yes","Yes","Fixed group of values; can be a dict key"],["set","{1, 2, 3}","No","Yes","No","No","Yes","Unique values, fast in, set maths"],["dict","{\"a\": 1}","Yes (insertion order)","Yes","Keys: No / values: Yes","By key","Yes (over the keys)","Look things up by key"],["str","\"abc\"","Yes","No","Yes","Yes","Yes","Text; methods return a new string"]];
+const CN={list:"Ordered, changeable, allows duplicates, index starts at 0. Create with [] or list(x). The default choice when the data changes.",tuple:"Ordered but not changeable. Good for fixed data (coordinates, a (min, max) result) and usable as a dictionary key. A single item needs a comma: (5,).",set:"No order, so no indexing, and every value is unique. Items must be immutable (no lists inside). The empty set is set(), because {} is an empty dictionary.",dict:"Key-value pairs: keys are unique and immutable, values can be anything. Keeps insertion order. A loop gives the keys. Not indexed by position."};
+const cinfo=k=>{if(k<6||k>8)return"";const on=k==6?["list"]:k==7?["dict"]:["tuple","set"];return`<div class="fb ok"><b>About containers: what do the words mean?</b><ul>${GLO.map(g=>`<li><b style="display:inline">${g[0]}</b> ${esc(g[1])}</li>`).join("")}</ul></div><div class="ct"><table><tr>${["Type","Example","Ordered","Changeable","Duplicates","Indexed","Iterable","Best for"].map(h=>`<th>${h}</th>`).join("")}</tr>${CT.map(r=>`<tr class="${on.includes(r[0])?"on":""}">${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</table></div>${on.map(n=>`<p><b>${n}:</b> ${esc(CN[n])}</p>`).join("")}<p class="mu">Choosing: items that change, in order: list. Fixed data: tuple. Unique values or set maths: set. Look up by name: dict. Convert with list(x), tuple(x), set(x) and dict(pairs).</p>`};
+const NBX={"0.0":{"c":"x = 4\nif x > 5:\n    print(\"big\")\nelif x > 2:\n    print(\"medium\")\nelse:\n    print(\"small\")","o":"medium"},"0.1":{"c":"a = True\nb = False\na and b   # True only if both are True\na or b    # True if at least one is True\nnot a     # flips True and False","o":"False\nTrue\nFalse"},"0.2":{"c":"x = 15\n10 < x <= 20                      # chained comparison\nprint(\"yes\" if x > 5 else \"no\")   # one-line if","o":"True\nyes"},"0.3":{"o":"no"},"0.4":{"o":"False\n3"},"1.0":{"c":"age = 20\nmember = True\nif age >= 18:\n    if member:\n        print(\"member price\")\n    else:\n        print(\"normal price\")\nelse:\n    print(\"too young\")","o":"member price"},"1.1":{"c":"a = 9\nb = 4\nc = 7\nif a > b:\n    if a > c:\n        print(a)\n    else:\n        print(c)","o":"9"},"1.2":{"c":"a = 3\nb = 5\nif a > 0:\n    if b > 0:\n        print(\"both\")\n# is the same as\nif a > 0 and b > 0:\n    print(\"both\")","o":"both\nboth"},"2.0":{"c":"day = \"sun\"\nmatch day:\n    case \"sat\" | \"sun\":\n        print(\"weekend\")\n    case \"fri\":\n        print(\"almost\")\n    case _:\n        print(\"weekday\")","o":"weekend"},"2.1":{"c":"n = -4\nmatch n:\n    case x if x < 0:\n        print(\"negative\")\n    case 0:\n        print(\"zero\")\n    case _:\n        print(\"positive\")","o":"negative"},"2.2":{"c":"p = (0, 5)\nmatch p:\n    case (0, 0):\n        print(\"origin\")\n    case (0, _):\n        print(\"on the y-axis\")","o":"on the y-axis"},"2.3":{"c":"data = {\"kind\": \"square\", \"val\": 6}\nmatch data:\n    case {\"kind\": \"square\", \"val\": x}:\n        print(x * x)","o":"36"},"3.0":{"c":"list(range(5))           # [0, 1, 2, 3, 4]\nlist(range(2, 7))        # [2, 3, 4, 5, 6]\nlist(range(10, 0, -3))   # [10, 7, 4, 1]","o":"[0, 1, 2, 3, 4]\n[2, 3, 4, 5, 6]\n[10, 7, 4, 1]"},"3.1":{"o":"a b c 0 5\n1 6","c":"for ch in \"abc\":\n    print(ch, end=\" \")    # a b c\nfor i, v in enumerate([5, 6]):\n    print(i, v)           # 0 5 and 1 6","t":[[0,1,"",[],0,"for takes the next item from 'abc': ch = 'a'."],[0,2,"",[["ch","'a'"]],0,"print('a') shows: a (on the same line, because of end)"],[0,1,"",[["ch","'a'"]],2,"for takes the next item from 'abc': ch = 'b'."],[0,2,"",[["ch","'b'"]],2,"print('b') shows: b (on the same line, because of end)"],[0,1,"",[["ch","'b'"]],4,"for takes the next item from 'abc': ch = 'c'."],[0,2,"",[["ch","'c'"]],4,"print('c') shows: c (on the same line, because of end)"],[0,1,"",[["ch","'c'"]],6,"No items left in 'abc': the loop ends."],[0,3,"",[["ch","'c'"]],6,"for takes the next item from enumerate([5, 6]): (i = ?, v) = ?."],[0,4,"",[["ch","'c'"],["i","0"],["v","5"]],6,"print(0, 5) shows: 0 5"],[0,3,"",[["ch","'c'"],["i","0"],["v","5"]],10,"for takes the next item from enumerate([5, 6]): (i = ?, v) = ?."],[0,4,"",[["ch","'c'"],["i","1"],["v","6"]],10,"print(1, 6) shows: 1 6"],[0,3,"",[["ch","'c'"],["i","1"],["v","6"]],14,"No items left in enumerate([5, 6]): the loop ends."],[3,0,"",[["ch","'c'"],["i","1"],["v","6"]],14,"Done. These are the final values."]]},"3.2":{"o":"1\n2\n4\n5","c":"for i in range(1, 10):\n    if i % 3 == 0:\n        continue    # skip this round\n    if i > 6:\n        break       # leave the loop\n    print(i)","t":[[0,1,"",[],0,"for takes the next item from range(1, 10): i = 1."],[0,2,"",[["i","1"]],0,"Checks if: i % 3 == 0 becomes 1 % 3 == 0 is False, so this block is skipped."],[0,4,"",[["i","1"]],0,"Checks if: i > 6 becomes 1 > 6 is False, so this block is skipped."],[0,6,"",[["i","1"]],0,"print(1) shows: 1"],[0,1,"",[["i","1"]],2,"for takes the next item from range(1, 10): i = 2."],[0,2,"",[["i","2"]],2,"Checks if: i % 3 == 0 becomes 2 % 3 == 0 is False, so this block is skipped."],[0,4,"",[["i","2"]],2,"Checks if: i > 6 becomes 2 > 6 is False, so this block is skipped."],[0,6,"",[["i","2"]],2,"print(2) shows: 2"],[0,1,"",[["i","2"]],4,"for takes the next item from range(1, 10): i = 3."],[0,2,"",[["i","3"]],4,"Checks if: i % 3 == 0 becomes 3 % 3 == 0 is True, so the block below runs."],[0,3,"",[["i","3"]],4,"continue: skips the rest of this round and jumps back to the loop header."],[0,1,"",[["i","3"]],4,"for takes the next item from range(1, 10): i = 4."],[0,2,"",[["i","4"]],4,"Checks if: i % 3 == 0 becomes 4 % 3 == 0 is False, so this block is skipped."],[0,4,"",[["i","4"]],4,"Checks if: i > 6 becomes 4 > 6 is False, so this block is skipped."],[0,6,"",[["i","4"]],4,"print(4) shows: 4"],[0,1,"",[["i","4"]],6,"for takes the next item from range(1, 10): i = 5."],[0,2,"",[["i","5"]],6,"Checks if: i % 3 == 0 becomes 5 % 3 == 0 is False, so this block is skipped."],[0,4,"",[["i","5"]],6,"Checks if: i > 6 becomes 5 > 6 is False, so this block is skipped."],[0,6,"",[["i","5"]],6,"print(5) shows: 5"],[0,1,"",[["i","5"]],8,"for takes the next item from range(1, 10): i = 6."],[0,2,"",[["i","6"]],8,"Checks if: i % 3 == 0 becomes 6 % 3 == 0 is True, so the block below runs."],[0,3,"",[["i","6"]],8,"continue: skips the rest of this round and jumps back to the loop header."],[0,1,"",[["i","6"]],8,"for takes the next item from range(1, 10): i = 7."],[0,2,"",[["i","7"]],8,"Checks if: i % 3 == 0 becomes 7 % 3 == 0 is False, so this block is skipped."],[0,4,"",[["i","7"]],8,"Checks if: i > 6 becomes 7 > 6 is True, so the block below runs."],[0,5,"",[["i","7"]],8,"break: leaves the loop immediately."],[3,0,"",[["i","7"]],8,"Done. These are the final values."]]},"3.3":{"o":"0 0\n0 1\n1 0\n1 1\n2 0\n2 1","c":"for i in range(3):\n    for j in range(2):\n        print(i, j)","t":[[0,1,"",[],0,"for takes the next item from range(3): i = 0."],[0,2,"",[["i","0"]],0,"for takes the next item from range(2): j = 0."],[0,3,"",[["i","0"],["j","0"]],0,"print(0, 0) shows: 0 0"],[0,2,"",[["i","0"],["j","0"]],4,"for takes the next item from range(2): j = 1."],[0,3,"",[["i","0"],["j","1"]],4,"print(0, 1) shows: 0 1"],[0,2,"",[["i","0"],["j","1"]],8,"No items left in range(2): the loop ends."],[0,1,"",[["i","0"],["j","1"]],8,"for takes the next item from range(3): i = 1."],[0,2,"",[["i","1"],["j","1"]],8,"for takes the next item from range(2): j = 0."],[0,3,"",[["i","1"],["j","0"]],8,"print(1, 0) shows: 1 0"],[0,2,"",[["i","1"],["j","0"]],12,"for takes the next item from range(2): j = 1."],[0,3,"",[["i","1"],["j","1"]],12,"print(1, 1) shows: 1 1"],[0,2,"",[["i","1"],["j","1"]],16,"No items left in range(2): the loop ends."],[0,1,"",[["i","1"],["j","1"]],16,"for takes the next item from range(3): i = 2."],[0,2,"",[["i","2"],["j","1"]],16,"for takes the next item from range(2): j = 0."],[0,3,"",[["i","2"],["j","0"]],16,"print(2, 0) shows: 2 0"],[0,2,"",[["i","2"],["j","0"]],20,"for takes the next item from range(2): j = 1."],[0,3,"",[["i","2"],["j","1"]],20,"print(2, 1) shows: 2 1"],[0,2,"",[["i","2"],["j","1"]],24,"No items left in range(2): the loop ends."],[0,1,"",[["i","2"],["j","1"]],24,"No items left in range(3): the loop ends."],[3,0,"",[["i","2"],["j","1"]],24,"Done. These are the final values."]]},"3.4":{"o":"10","c":"total = 0\nfor n in [4, 6]:\n    total += n     # accumulate\nprint(total)       # 10","t":[[0,1,"",[],0,"Calculates the right side first: 0 = 0. Stores it in total."],[0,2,"",[["total","0"]],0,"for takes the next item from [4, 6]: n = 4."],[0,3,"",[["total","0"],["n","4"]],0,"Calculates 0 + 4 = 4 and stores it in total."],[0,2,"",[["total","4"],["n","4"]],0,"for takes the next item from [4, 6]: n = 6."],[0,3,"",[["total","4"],["n","6"]],0,"Calculates 4 + 6 = 10 and stores it in total."],[0,2,"",[["total","10"],["n","6"]],0,"No items left in [4, 6]: the loop ends."],[0,4,"",[["total","10"],["n","6"]],0,"print(10) shows: 10"],[3,0,"",[["total","10"],["n","6"]],3,"Done. These are the final values."]]},"3.5":{"c":"a, b = 0, 1\nfor i in range(6):\n    print(a, end=\" \")\n    a, b = b, a + b","o":"0 1 1 2 3 5 ","t":[[0,1,"",[],0,"Calculates the right side first: (0, 1) = (0, 1). Then (a, b) gets this value."],[0,2,"",[["a","0"],["b","1"]],0,"for takes the next item from range(6): i = 0."],[0,3,"",[["a","0"],["b","1"],["i","0"]],0,"print(0) shows: 0 (on the same line, because of end)"],[0,4,"",[["a","0"],["b","1"],["i","0"]],2,"Calculates the right side first: (1, 0 + 1) = (1, 1). Then (a, b) gets this value."],[0,2,"",[["a","1"],["b","1"],["i","0"]],2,"for takes the next item from range(6): i = 1."],[0,3,"",[["a","1"],["b","1"],["i","1"]],2,"print(1) shows: 1 (on the same line, because of end)"],[0,4,"",[["a","1"],["b","1"],["i","1"]],4,"Calculates the right side first: (1, 1 + 1) = (1, 2). Then (a, b) gets this value."],[0,2,"",[["a","1"],["b","2"],["i","1"]],4,"for takes the next item from range(6): i = 2."],[0,3,"",[["a","1"],["b","2"],["i","2"]],4,"print(1) shows: 1 (on the same line, because of end)"],[0,4,"",[["a","1"],["b","2"],["i","2"]],6,"Calculates the right side first: (2, 1 + 2) = (2, 3). Then (a, b) gets this value."],[0,2,"",[["a","2"],["b","3"],["i","2"]],6,"for takes the next item from range(6): i = 3."],[0,3,"",[["a","2"],["b","3"],["i","3"]],6,"print(2) shows: 2 (on the same line, because of end)"],[0,4,"",[["a","2"],["b","3"],["i","3"]],8,"Calculates the right side first: (3, 2 + 3) = (3, 5). Then (a, b) gets this value."],[0,2,"",[["a","3"],["b","5"],["i","3"]],8,"for takes the next item from range(6): i = 4."],[0,3,"",[["a","3"],["b","5"],["i","4"]],8,"print(3) shows: 3 (on the same line, because of end)"],[0,4,"",[["a","3"],["b","5"],["i","4"]],10,"Calculates the right side first: (5, 3 + 5) = (5, 8). Then (a, b) gets this value."],[0,2,"",[["a","5"],["b","8"],["i","4"]],10,"for takes the next item from range(6): i = 5."],[0,3,"",[["a","5"],["b","8"],["i","5"]],10,"print(5) shows: 5 (on the same line, because of end)"],[0,4,"",[["a","5"],["b","8"],["i","5"]],12,"Calculates the right side first: (8, 5 + 8) = (8, 13). Then (a, b) gets this value."],[0,2,"",[["a","8"],["b","13"],["i","5"]],12,"No items left in range(6): the loop ends."],[3,0,"",[["a","8"],["b","13"],["i","5"]],12,"Done. These are the final values."]]},"3.6":{"c":"total = 0\nfor i in range(1, 6):\n    total += i\nprint(total)   # 15","o":"15","t":[[0,1,"",[],0,"Calculates the right side first: 0 = 0. Stores it in total."],[0,2,"",[["total","0"]],0,"for takes the next item from range(1, 6): i = 1."],[0,3,"",[["total","0"],["i","1"]],0,"Calculates 0 + 1 = 1 and stores it in total."],[0,2,"",[["total","1"],["i","1"]],0,"for takes the next item from range(1, 6): i = 2."],[0,3,"",[["total","1"],["i","2"]],0,"Calculates 1 + 2 = 3 and stores it in total."],[0,2,"",[["total","3"],["i","2"]],0,"for takes the next item from range(1, 6): i = 3."],[0,3,"",[["total","3"],["i","3"]],0,"Calculates 3 + 3 = 6 and stores it in total."],[0,2,"",[["total","6"],["i","3"]],0,"for takes the next item from range(1, 6): i = 4."],[0,3,"",[["total","6"],["i","4"]],0,"Calculates 6 + 4 = 10 and stores it in total."],[0,2,"",[["total","10"],["i","4"]],0,"for takes the next item from range(1, 6): i = 5."],[0,3,"",[["total","10"],["i","5"]],0,"Calculates 10 + 5 = 15 and stores it in total."],[0,2,"",[["total","15"],["i","5"]],0,"No items left in range(1, 6): the loop ends."],[0,4,"",[["total","15"],["i","5"]],0,"print(15) shows: 15"],[3,0,"",[["total","15"],["i","5"]],3,"Done. These are the final values."]]},"4.0":{"o":"3\n2\n1","c":"n = 3\nwhile n > 0:\n    print(n)\n    n -= 1","t":[[0,1,"",[],0,"Calculates the right side first: 3 = 3. Stores it in n."],[0,2,"",[["n","3"]],0,"Checks while: n > 0 becomes 3 > 0 is True, so the loop body runs."],[0,3,"",[["n","3"]],0,"print(3) shows: 3"],[0,4,"",[["n","3"]],2,"Calculates 3 - 1 = 2 and stores it in n."],[0,2,"",[["n","2"]],2,"Checks while: n > 0 becomes 2 > 0 is True, so the loop body runs."],[0,3,"",[["n","2"]],2,"print(2) shows: 2"],[0,4,"",[["n","2"]],4,"Calculates 2 - 1 = 1 and stores it in n."],[0,2,"",[["n","1"]],4,"Checks while: n > 0 becomes 1 > 0 is True, so the loop body runs."],[0,3,"",[["n","1"]],4,"print(1) shows: 1"],[0,4,"",[["n","1"]],6,"Calculates 1 - 1 = 0 and stores it in n."],[0,2,"",[["n","0"]],6,"Checks while: n > 0 becomes 0 > 0 is False, so the loop ends."],[3,0,"",[["n","0"]],6,"Done. These are the final values."]]},"4.1":{"o":"Number: abc\nNumber: 42\n(simulated keyboard input: abc, then 42)"},"4.2":{"c":"i = 3\nwhile i <= 10:\n    if i % 3 == 0:\n        i += 2\n        continue\n    i += 1\nprint(i)    # 11","o":"11","t":[[0,1,"",[],0,"Calculates the right side first: 3 = 3. Stores it in i."],[0,2,"",[["i","3"]],0,"Checks while: i <= 10 becomes 3 <= 10 is True, so the loop body runs."],[0,3,"",[["i","3"]],0,"Checks if: i % 3 == 0 becomes 3 % 3 == 0 is True, so the block below runs."],[0,4,"",[["i","3"]],0,"Calculates 3 + 2 = 5 and stores it in i."],[0,5,"",[["i","5"]],0,"continue: skips the rest of this round and jumps back to the loop header."],[0,2,"",[["i","5"]],0,"Checks while: i <= 10 becomes 5 <= 10 is True, so the loop body runs."],[0,3,"",[["i","5"]],0,"Checks if: i % 3 == 0 becomes 5 % 3 == 0 is False, so this block is skipped."],[0,6,"",[["i","5"]],0,"Calculates 5 + 1 = 6 and stores it in i."],[0,2,"",[["i","6"]],0,"Checks while: i <= 10 becomes 6 <= 10 is True, so the loop body runs."],[0,3,"",[["i","6"]],0,"Checks if: i % 3 == 0 becomes 6 % 3 == 0 is True, so the block below runs."],[0,4,"",[["i","6"]],0,"Calculates 6 + 2 = 8 and stores it in i."],[0,5,"",[["i","8"]],0,"continue: skips the rest of this round and jumps back to the loop header."],[0,2,"",[["i","8"]],0,"Checks while: i <= 10 becomes 8 <= 10 is True, so the loop body runs."],[0,3,"",[["i","8"]],0,"Checks if: i % 3 == 0 becomes 8 % 3 == 0 is False, so this block is skipped."],[0,6,"",[["i","8"]],0,"Calculates 8 + 1 = 9 and stores it in i."],[0,2,"",[["i","9"]],0,"Checks while: i <= 10 becomes 9 <= 10 is True, so the loop body runs."],[0,3,"",[["i","9"]],0,"Checks if: i % 3 == 0 becomes 9 % 3 == 0 is True, so the block below runs."],[0,4,"",[["i","9"]],0,"Calculates 9 + 2 = 11 and stores it in i."],[0,5,"",[["i","11"]],0,"continue: skips the rest of this round and jumps back to the loop header."],[0,2,"",[["i","11"]],0,"Checks while: i <= 10 becomes 11 <= 10 is False, so the loop ends."],[0,7,"",[["i","11"]],0,"print(11) shows: 11"],[3,0,"",[["i","11"]],3,"Done. These are the final values."]]},"4.3":{"o":"12","c":"n = 345\ntotal = 0\nwhile n > 0:\n    total += n % 10    # last digit\n    n //= 10           # remove it\nprint(total)           # 12","t":[[0,1,"",[],0,"Calculates the right side first: 345 = 345. Stores it in n."],[0,2,"",[["n","345"]],0,"Calculates the right side first: 0 = 0. Stores it in total."],[0,3,"",[["n","345"],["total","0"]],0,"Checks while: n > 0 becomes 345 > 0 is True, so the loop body runs."],[0,4,"",[["n","345"],["total","0"]],0,"Calculates 0 + 345 % 10 = 5 and stores it in total."],[0,5,"",[["n","345"],["total","5"]],0,"Calculates 345 // 10 = 34 and stores it in n."],[0,3,"",[["n","34"],["total","5"]],0,"Checks while: n > 0 becomes 34 > 0 is True, so the loop body runs."],[0,4,"",[["n","34"],["total","5"]],0,"Calculates 5 + 34 % 10 = 9 and stores it in total."],[0,5,"",[["n","34"],["total","9"]],0,"Calculates 34 // 10 = 3 and stores it in n."],[0,3,"",[["n","3"],["total","9"]],0,"Checks while: n > 0 becomes 3 > 0 is True, so the loop body runs."],[0,4,"",[["n","3"],["total","9"]],0,"Calculates 9 + 3 % 10 = 12 and stores it in total."],[0,5,"",[["n","3"],["total","12"]],0,"Calculates 3 // 10 = 0 and stores it in n."],[0,3,"",[["n","0"],["total","12"]],0,"Checks while: n > 0 becomes 0 > 0 is False, so the loop ends."],[0,6,"",[["n","0"],["total","12"]],0,"print(12) shows: 12"],[3,0,"",[["n","0"],["total","12"]],3,"Done. These are the final values."]]},"4.4":{"c":"n = 6\nsteps = 0\nwhile n != 1:\n    if n % 2 == 0:\n        n //= 2\n    else:\n        n = 3 * n + 1\n    steps += 1\nprint(steps)   # 8","o":"8","t":[[0,1,"",[],0,"Calculates the right side first: 6 = 6. Stores it in n."],[0,2,"",[["n","6"]],0,"Calculates the right side first: 0 = 0. Stores it in steps."],[0,3,"",[["n","6"],["steps","0"]],0,"Checks while: n != 1 becomes 6 != 1 is True, so the loop body runs."],[0,4,"",[["n","6"],["steps","0"]],0,"Checks if: n % 2 == 0 becomes 6 % 2 == 0 is True, so the block below runs."],[0,5,"",[["n","6"],["steps","0"]],0,"Calculates 6 // 2 = 3 and stores it in n."],[0,8,"",[["n","3"],["steps","0"]],0,"Calculates 0 + 1 = 1 and stores it in steps."],[0,3,"",[["n","3"],["steps","1"]],0,"Checks while: n != 1 becomes 3 != 1 is True, so the loop body runs."],[0,4,"",[["n","3"],["steps","1"]],0,"Checks if: n % 2 == 0 becomes 3 % 2 == 0 is False, so this block is skipped."],[0,7,"",[["n","3"],["steps","1"]],0,"Calculates the right side first: 3 * 3 + 1 = 10. Stores it in n."],[0,8,"",[["n","10"],["steps","1"]],0,"Calculates 1 + 1 = 2 and stores it in steps."],[0,3,"",[["n","10"],["steps","2"]],0,"Checks while: n != 1 becomes 10 != 1 is True, so the loop body runs."],[0,4,"",[["n","10"],["steps","2"]],0,"Checks if: n % 2 == 0 becomes 10 % 2 == 0 is True, so the block below runs."],[0,5,"",[["n","10"],["steps","2"]],0,"Calculates 10 // 2 = 5 and stores it in n."],[0,8,"",[["n","5"],["steps","2"]],0,"Calculates 2 + 1 = 3 and stores it in steps."],[0,3,"",[["n","5"],["steps","3"]],0,"Checks while: n != 1 becomes 5 != 1 is True, so the loop body runs."],[0,4,"",[["n","5"],["steps","3"]],0,"Checks if: n % 2 == 0 becomes 5 % 2 == 0 is False, so this block is skipped."],[0,7,"",[["n","5"],["steps","3"]],0,"Calculates the right side first: 3 * 5 + 1 = 16. Stores it in n."],[0,8,"",[["n","16"],["steps","3"]],0,"Calculates 3 + 1 = 4 and stores it in steps."],[0,3,"",[["n","16"],["steps","4"]],0,"Checks while: n != 1 becomes 16 != 1 is True, so the loop body runs."],[0,4,"",[["n","16"],["steps","4"]],0,"Checks if: n % 2 == 0 becomes 16 % 2 == 0 is True, so the block below runs."],[0,5,"",[["n","16"],["steps","4"]],0,"Calculates 16 // 2 = 8 and stores it in n."],[0,8,"",[["n","8"],["steps","4"]],0,"Calculates 4 + 1 = 5 and stores it in steps."],[0,3,"",[["n","8"],["steps","5"]],0,"Checks while: n != 1 becomes 8 != 1 is True, so the loop body runs."],[0,4,"",[["n","8"],["steps","5"]],0,"Checks if: n % 2 == 0 becomes 8 % 2 == 0 is True, so the block below runs."],[0,5,"",[["n","8"],["steps","5"]],0,"Calculates 8 // 2 = 4 and stores it in n."],[0,8,"",[["n","4"],["steps","5"]],0,"Calculates 5 + 1 = 6 and stores it in steps."],[0,3,"",[["n","4"],["steps","6"]],0,"Checks while: n != 1 becomes 4 != 1 is True, so the loop body runs."],[0,4,"",[["n","4"],["steps","6"]],0,"Checks if: n % 2 == 0 becomes 4 % 2 == 0 is True, so the block below runs."],[0,5,"",[["n","4"],["steps","6"]],0,"Calculates 4 // 2 = 2 and stores it in n."],[0,8,"",[["n","2"],["steps","6"]],0,"Calculates 6 + 1 = 7 and stores it in steps."],[0,3,"",[["n","2"],["steps","7"]],0,"Checks while: n != 1 becomes 2 != 1 is True, so the loop body runs."],[0,4,"",[["n","2"],["steps","7"]],0,"Checks if: n % 2 == 0 becomes 2 % 2 == 0 is True, so the block below runs."],[0,5,"",[["n","2"],["steps","7"]],0,"Calculates 2 // 2 = 1 and stores it in n."],[0,8,"",[["n","1"],["steps","7"]],0,"Calculates 7 + 1 = 8 and stores it in steps."],[0,3,"",[["n","1"],["steps","8"]],0,"Checks while: n != 1 becomes 1 != 1 is False, so the loop ends."],[0,9,"",[["n","1"],["steps","8"]],0,"print(8) shows: 8"],[3,0,"",[["n","1"],["steps","8"]],2,"Done. These are the final values."]]},"4.5":{"c":"x = 1\nsteps = 0\nwhile x < 40:\n    x *= 2\n    steps += 1\nprint(x, steps)   # 64 6","o":"64 6","t":[[0,1,"",[],0,"Calculates the right side first: 1 = 1. Stores it in x."],[0,2,"",[["x","1"]],0,"Calculates the right side first: 0 = 0. Stores it in steps."],[0,3,"",[["x","1"],["steps","0"]],0,"Checks while: x < 40 becomes 1 < 40 is True, so the loop body runs."],[0,4,"",[["x","1"],["steps","0"]],0,"Calculates 1 * 2 = 2 and stores it in x."],[0,5,"",[["x","2"],["steps","0"]],0,"Calculates 0 + 1 = 1 and stores it in steps."],[0,3,"",[["x","2"],["steps","1"]],0,"Checks while: x < 40 becomes 2 < 40 is True, so the loop body runs."],[0,4,"",[["x","2"],["steps","1"]],0,"Calculates 2 * 2 = 4 and stores it in x."],[0,5,"",[["x","4"],["steps","1"]],0,"Calculates 1 + 1 = 2 and stores it in steps."],[0,3,"",[["x","4"],["steps","2"]],0,"Checks while: x < 40 becomes 4 < 40 is True, so the loop body runs."],[0,4,"",[["x","4"],["steps","2"]],0,"Calculates 4 * 2 = 8 and stores it in x."],[0,5,"",[["x","8"],["steps","2"]],0,"Calculates 2 + 1 = 3 and stores it in steps."],[0,3,"",[["x","8"],["steps","3"]],0,"Checks while: x < 40 becomes 8 < 40 is True, so the loop body runs."],[0,4,"",[["x","8"],["steps","3"]],0,"Calculates 8 * 2 = 16 and stores it in x."],[0,5,"",[["x","16"],["steps","3"]],0,"Calculates 3 + 1 = 4 and stores it in steps."],[0,3,"",[["x","16"],["steps","4"]],0,"Checks while: x < 40 becomes 16 < 40 is True, so the loop body runs."],[0,4,"",[["x","16"],["steps","4"]],0,"Calculates 16 * 2 = 32 and stores it in x."],[0,5,"",[["x","32"],["steps","4"]],0,"Calculates 4 + 1 = 5 and stores it in steps."],[0,3,"",[["x","32"],["steps","5"]],0,"Checks while: x < 40 becomes 32 < 40 is True, so the loop body runs."],[0,4,"",[["x","32"],["steps","5"]],0,"Calculates 32 * 2 = 64 and stores it in x."],[0,5,"",[["x","64"],["steps","5"]],0,"Calculates 5 + 1 = 6 and stores it in steps."],[0,3,"",[["x","64"],["steps","6"]],0,"Checks while: x < 40 becomes 64 < 40 is False, so the loop ends."],[0,6,"",[["x","64"],["steps","6"]],0,"print(64, 6) shows: 64 6"],[3,0,"",[["x","64"],["steps","6"]],5,"Done. These are the final values."]]},"5.0":{"o":"Bad\nDone"},"5.1":{"c":"x = 0\ntry:\n    print(10 // x)\nexcept ZeroDivisionError:\n    print(\"zero\")\nexcept TypeError:\n    print(\"type\")","o":"zero"},"5.2":{"c":"d = {\"a\": 1}\nkey = \"z\"\ntry:\n    value = d[key]\nexcept KeyError:\n    print(\"missing\")\nelse:\n    print(\"found\")\nfinally:\n    print(\"always\")","o":"missing\nalways"},"5.3":{"o":"neg"}};const EXTRA={"3": [["a, b = 0, 1\nfor i in range(6):\n    print(a, end=\" \")\n    a, b = b, a + b", "Fibonacci numbers: every number is the sum of the two before it. a, b = b, a + b updates both names at once, using the old values on the right. Press 👣 Step through to follow a and b in every round."], ["total = 0\nfor i in range(1, 6):\n    total += i\nprint(total)   # 15", "Adding 1 + 2 + 3 + 4 + 5. Step through to see total grow in every round."]],"4": [["n = 6\nsteps = 0\nwhile n != 1:\n    if n % 2 == 0:\n        n //= 2\n    else:\n        n = 3 * n + 1\n    steps += 1\nprint(steps)   # 8", "The Collatz sequence: halve even numbers, turn odd numbers into 3n + 1. Python checks the while condition again before every round."], ["x = 1\nsteps = 0\nwhile x < 40:\n    x *= 2\n    steps += 1\nprint(x, steps)   # 64 6", "Doubling until x reaches 40 or more. Step through to see the condition and the new value of x each round."]]};
+let nbN=0;const NBT={};
+const nbCell=(k,i,c,x)=>{const n=NBX[k+"."+i]||{},id=k+"."+i;return`<div class="nb" data-nb="${id}"><div class="nbr"><span class="nbl">In [ ]:</span><div class="nbc"><pre class="code">${esc(n.c||c)}</pre><div class="nbbtns"><button class="btn nbrun" data-run="${id}">▶ Run</button>${n.t?`<button class="btn" data-tr="${id}">👣 Step through</button>`:""}</div></div></div><div class="nbo"></div><div class="nbt"></div><p>${esc(x)}</p></div>`};
+const nbBar=k=>`<div class="nbbar"><button class="btn p" data-nball="1">▶▶ Run all cells</button><button class="btn" data-nbclear="1">Clear outputs</button></div><p class="mu">Cells run from top to bottom like one notebook, so a cell can use variables from the cells above it. Press ▶ Run to see the output. Cells with a 👣 button can also be followed step by step: you see which line Python runs, the calculation with the real values, the variables, the call stack and the output so far. The outputs and steps come from running exactly this code in Python; the code itself is read-only.</p>`;
+function nbRun(id){const el=document.querySelector(`[data-nb="${id}"]`);if(!el)return;nbN++;const n=NBX[id]||{};
+  el.querySelector(".nbl").textContent=`In [${nbN}]:`;
+  el.querySelector(".nbo").innerHTML=`<div class="nbr"><span class="nbl nbout">Out:</span>${n.o?`<pre class="nbres">${esc(n.o)}</pre>`:`<span class="mu">(no output)</span>`}</div>`}
+function trStop(id){const s=NBT[id];if(s&&s.t){clearInterval(s.t);s.t=null}}
+function trShow(id){const box=document.querySelector(`[data-nb="${id}"] .nbt`);if(!box)return;if(box.innerHTML){trStop(id);box.innerHTML="";return}
+  NBT[id]={i:0,t:null};const S=NBX[id].t;
+  box.innerHTML=`<div class="tr"><div class="trh"><b class="trc"></b><span class="trb"><button class="btn" data-trn="${id}:-1">◀ Back</button><button class="btn p" data-trn="${id}:1">Next ▶</button><button class="btn" data-trp="${id}">▶ Play</button></span></div><input type="range" class="trs" data-trs="${id}" min="0" max="${S.length-1}" value="0"><div class="trbody"></div></div>`;trDraw(id)}
+function trDraw(id){const n=NBX[id],S=n.t,s=NBT[id],box=document.querySelector(`[data-nb="${id}"] .nbt`);if(!box||!s){trStop(id);return}
+  const i=s.i,st=S[i],pv=S[i-1],lines=n.c.split("\n"),pvars=pv&&pv[2]==st[2]?Object.fromEntries(pv[3]):{};
+  box.querySelector(".trc").textContent=`Step ${i+1} of ${S.length}`;
+  box.querySelector(`[data-trn="${id}:-1"]`).disabled=i==0;box.querySelector(`[data-trn="${id}:1"]`).disabled=i==S.length-1;
+  box.querySelector(`[data-trp="${id}"]`).textContent=s.t?"⏸ Pause":"▶ Play";box.querySelector(".trs").value=i;
+  box.querySelector(".trbody").innerHTML=`<pre class="trcode">${lines.map((l,j)=>`<span class="tl${j+1==st[1]?" cur":""}"><i>${j+1}</i>${esc(l)||" "}</span>`).join("")}</pre><div class="trnote">${st[0]==3?"✔ ":""}${esc(st[5]||(st[1]?"Python runs this line.":""))}</div><div class="trst"><b>Call stack:</b> ${["main program"].concat(st[2]?st[2].split("|"):[]).map((x,j,a)=>`<span class="chip${j==a.length-1?" on":""}">${esc(x)}</span>`).join(" → ")}</div><div class="mu trl">Variables${st[2]?" in the current call":""} (changed ones are highlighted)</div><div class="trv">${st[3].length?st[3].map(([a,b])=>`<span class="var${pvars[a]!==b?" ch":""}"><code>${esc(a)}</code> = ${esc(b)}</span>`).join(""):`<span class="mu">(none yet)</span>`}</div><div class="mu trl">Printed so far</div><pre class="nbres">${esc((n.o||"").slice(0,st[4]))||" "}</pre>`}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-run],[data-nball],[data-nbclear],[data-tr],[data-trn],[data-trp]");if(!b)return;const d=b.dataset;
+  if(d.run)nbRun(d.run);
+  else if(d.tr)trShow(d.tr);
+  else if(d.trn){const[id,dl]=d.trn.split(":"),s=NBT[id],S=NBX[id].t;trStop(id);s.i=Math.max(0,Math.min(S.length-1,s.i+ +dl));trDraw(id)}
+  else if(d.trp){const id=d.trp,s=NBT[id],S=NBX[id].t;if(s.t){trStop(id);trDraw(id)}else{if(s.i>=S.length-1)s.i=0;s.t=setInterval(()=>{if(s.i>=S.length-1){trStop(id);trDraw(id);return}s.i++;trDraw(id)},1100);trDraw(id)}}
+  else if(d.nball){nbN=0;document.querySelectorAll("[data-nb]").forEach(el=>nbRun(el.dataset.nb))}
+  else{nbN=0;document.querySelectorAll("[data-nb]").forEach(el=>{trStop(el.dataset.nb);el.querySelector(".nbl").textContent="In [ ]:";el.querySelector(".nbo").innerHTML="";el.querySelector(".nbt").innerHTML=""})}});
+document.addEventListener("input",e=>{const r=e.target;if(r&&r.dataset&&r.dataset.trs){const id=r.dataset.trs;trStop(id);NBT[id].i=+r.value;trDraw(id)}});
+const EXAM=[[2,0,"a = 7\nb = 3\nc = a * b - 5\nif c > 15 and a % 2 == 1:\n    print(\"A\")\nelif c > 15 or b == 3:\n    print(\"B\")\nelse:\n    print(\"C\")","A",["B","C","A\nB"],"c = 7 * 3 - 5 = 16. 16 > 15 is True and 7 % 2 == 1 is True, so the first branch prints A. The other branches are skipped."],[2,0,"x = 12\ny = 5\nprint(x // y, x % y, x / 4 > y - 3)","2 2 True",["2.4 2 True","2 2 False","2 2 3.0"],"12 // 5 = 2 (rounded down), 12 % 5 = 2 (remainder). 12 / 4 = 3.0 and y - 3 = 2, so 3.0 > 2 is True."],[2,0,"t = 25\nif t < 0:\n    print(\"freezing\")\nelif t < 15:\n    print(\"cold\")\nelif t < 25:\n    print(\"mild\")\nelse:\n    print(\"warm\")","warm",["mild","cold","freezing"],"25 < 0, 25 < 15 and 25 < 25 are all False (25 is not smaller than 25), so the else branch prints warm."],[2,1,"a = 8\nb = 3\nif a > b:\n    a -= 2\n    if a % 3 == 0:\n        print(a)\n    else:\n        print(a + b)\nelse:\n    print(b)","6",["9","3","8"],"8 > 3 is True, so a becomes 6. Then 6 % 3 == 0 is True and the inner block prints a, which is 6."],[2,1,"n = 14\nif n % 2 == 0:\n    if n > 10:\n        if n % 7 == 0:\n            print(\"X\")\n        else:\n            print(\"Y\")\n    else:\n        print(\"Z\")\nelse:\n    print(\"W\")","X",["Y","Z","W"],"14 is even, 14 > 10 is True and 14 % 7 == 0 is True, so the innermost if prints X."],[2,2,"cmd = \"move\"\nsteps = 4\nmatch cmd:\n    case \"stop\":\n        print(\"halt\")\n    case \"move\" if steps > 5:\n        print(\"far\")\n    case \"move\":\n        print(\"near\")\n    case _:\n        print(\"unknown\")","near",["far","halt","unknown"],"\"move\" matches the second case, but its guard steps > 5 is False (4 > 5), so Python goes on to the third case: near."],[2,2,"point = (3, 3)\nmatch point:\n    case (0, _):\n        print(\"A\")\n    case (x, y) if x == y:\n        print(\"B\", x)\n    case (x, y):\n        print(\"C\", x + y)","B 3",["C 6","B 6","A"],"The first pattern needs 0 as first value, which fails. The second pattern captures x = 3 and y = 3 and its guard x == y is True, so it prints B 3."],[2,2,"code = 404\nmatch code:\n    case 200 | 201:\n        print(\"ok\")\n    case 400 | 404 | 500:\n        print(\"error\", code // 100)\n    case _:\n        print(\"other\")","error 4",["error 404","ok","other"],"404 matches the second case (| means or). 404 // 100 = 4, so it prints error 4."],[2,3,"total = 0\nfor i in range(1, 8, 2):\n    if i == 5:\n        continue\n    total += i\nprint(total)","11",["16","4","12"],"range(1, 8, 2) gives 1, 3, 5, 7. The value 5 is skipped by continue, so total = 1 + 3 + 7 = 11."],[2,3,"for i in range(3):\n    for j in range(i, 3):\n        print(i * j, end=\" \")","0 0 0 1 2 4",["0 0 0 0 1 2 0 2 4","1 2 4","0 0 0 1 2 4 4"],"The inner loop starts at j = i. i = 0: j = 0, 1, 2 gives 0 0 0. i = 1: j = 1, 2 gives 1 2. i = 2: j = 2 gives 4."],[2,3,"word = \"banana\"\ncount = 0\nfor ch in word:\n    if ch == \"a\":\n        count += 1\n    elif ch == \"n\":\n        count += 10\nprint(count)","23",["5","13","33"],"\"banana\" has 3 letters a (+1 each = 3) and 2 letters n (+10 each = 20). Total 23."],[2,3,"nums = [3, 8, 5, 12, 7]\nfor i, v in enumerate(nums):\n    if v > 6:\n        print(i, end=\" \")\n        break\nprint(v)","1 8",["8 8","1 12","1 3"],"The first value above 6 is 8 at index 1. It prints 1, then break stops the loop. The variable v still holds 8, so print(v) prints 8."],[2,4,"n = 27\ncount = 0\nwhile n > 3:\n    n //= 3\n    count += 1\nprint(count, n)","2 3",["3 1","2 9","3 3"],"27 becomes 9 (count 1), then 3 (count 2). Now 3 > 3 is False, so the loop ends with count 2 and n 3."],[2,4,"x = 1\ntotal = 0\nwhile x < 20:\n    total += x\n    x *= 3\nprint(total, x)","13 27",["13 9","4 27","40 81"],"x takes the values 1, 3, 9 and each is added: 1 + 3 + 9 = 13. After 9 comes x = 27, which is not below 20, so the loop stops."],[2,4,"i = 10\nwhile i > 0:\n    i -= 3\n    if i % 2 == 0:\n        continue\n    print(i, end=\" \")","7 1",["7 4 1","7 1 -2","4 -2"],"i becomes 7 (odd, printed), 4 (even, skipped), 1 (odd, printed), -2 (even, skipped). Then -2 > 0 is False and the loop ends."],[2,4,"a = 0\nb = 1\nn = 0\nwhile n < 5:\n    a, b = b, a + b\n    n += 1\nprint(a)","5",["8","3","13"],"Five rounds of a, b = b, a + b give (a, b) = (1, 1), (1, 2), (2, 3), (3, 5), (5, 8). After the fifth round a is 5."],[2,5,"def convert(s):\n    try:\n        return int(s) * 2\n    except ValueError:\n        return -1\n\nprint(convert(\"21\"), convert(\"2x\"), convert(\"-4\"))","42 -1 -8",["42 -1 8","42 -1 -4","21 -1 -4"],"int(\"21\") * 2 = 42. int(\"2x\") raises ValueError, so -1 is returned. int(\"-4\") works (a minus sign is allowed) and gives -8."],[2,5,"data = {\"a\": 1, \"b\": 0}\nfor key in [\"a\", \"b\", \"c\"]:\n    try:\n        print(10 // data[key], end=\" \")\n    except ZeroDivisionError:\n        print(\"zero\", end=\" \")\n    except KeyError:\n        print(\"missing\", end=\" \")","10 zero missing",["10 0 missing","10 zero","zero missing"],"\"a\": 10 // 1 = 10. \"b\": 10 // 0 raises ZeroDivisionError (zero). \"c\": the key does not exist, KeyError (missing)."],[2,5,"def f(n):\n    try:\n        if n < 0:\n            raise ValueError\n        return n * 2\n    except ValueError:\n        return 0\n    finally:\n        print(\"done\", end=\" \")\n\nprint(f(4), f(-1))","done done 8 0",["8 0 done done","done 8 0","done 8 done 0"],"print evaluates both calls before it prints anything. Each call runs its finally block and prints done. Only then print shows the results 8 and 0."]];
+let EX=null;
+const exLS=()=>{try{return JSON.parse(localStorage.getItem("pyx")||"{}")}catch(e){return{}}};
+const exMenu=()=>{const l=exLS();return`<button class="btn all" data-ex="start" style="margin-top:8px;background:#334155;color:#fff;border:0">📝 Practice exam · 30 mixed questions</button><p class="mu" style="margin:4px 0 0;font-size:13px">No feedback while you answer. You get your score and all the correct answers at the end.${l.last?` Last result: ${l.last[0]}/${l.last[1]} · best: ${l.best}/${l.last[1]}.`:""}</p>`};
+function exStart(){if(!authed())return loginPage("the practice exam");const pk=(m,n)=>shuf(EXAM.filter(q=>q[0]==m)).slice(0,n);
+  EX={qs:shuf(pk(2,11).concat(pk(3,7),pk(4,6),pk(5,6))).map(q=>({q,o:shuf([[q[3],1],...q[4].map(x=>[x,0])]),a:null})),i:0,t0:Date.now(),warn:0,done:0};exDraw()}
+function exDraw(keep){if(!keep)window.scrollTo(0,0);const E=EX,x=E.qs[E.i],n=E.qs.length,un=E.qs.filter(z=>z.a==null).length;
+  let h=`<div class="bar"><button class="btn" data-ex="menu">← Menu</button><span class="mu">Practice exam · answered ${n-un} of ${n}</span></div><div class="prog"><i style="width:${(E.i+1)/n*100}%"></i></div><div class="exnav">${E.qs.map((z,j)=>`<button class="exn${j==E.i?" cur":""}${z.a!=null?" ans":""}" data-ex="go:${j}">${j+1}</button>`).join("")}</div><p><b>Question ${E.i+1} of ${n}: what is the output of this code?</b></p><div class="img"><canvas id="cv" role="img" aria-label="Python code"></canvas></div>`;
+  x.o.forEach((o,k)=>h+=`<button class="btn xopt${x.a===k?" sel":""}" data-ex="pick:${k}"><span class="l">${"ABCD"[k]}</span><pre>${esc(o[0])}</pre></button>`);
+  h+=`<div class="exb"><button class="btn" data-ex="prev"${E.i?"":" disabled"}>← Previous</button>${E.i<n-1?`<button class="btn p" data-ex="next">Next →</button>`:`<button class="btn p" data-ex="finish">Submit exam</button>`}</div>`;
+  if(E.warn)h+=`<div class="fb bad"><b>${un} question(s) not answered yet.</b>Unanswered questions count as wrong. Use the numbers at the top to go back, or <button class="btn" data-ex="finish2">submit anyway</button></div>`;
+  A.innerHTML=h;draw($("#cv"),x.q[2])}
+function exRev(only){const E=EX;$("#exrev").innerHTML=E.qs.map((z,i)=>{const c=z.a!=null&&z.o[z.a][1],q=z.q;if(only&&c)return"";
+  return`<div class="exr ${c?"ok":"bad"}"><b>Question ${i+1}: ${c?"✓ correct":z.a==null?"✗ not answered":"✗ wrong"} <span class="mu">· ${esc(TOP[q[1]][1])}</span></b><pre class="code">${esc(q[2])}</pre>${z.o.map((o,k)=>`<div class="xr${o[1]?" good":z.a===k?" mine":""}"><span class="l">${"ABCD"[k]}</span><pre>${esc(o[0])}</pre>${o[1]?"<em>correct answer</em>":z.a===k?"<em>your answer</em>":""}</div>`).join("")}<p>${esc(q[5])}</p>${syn({t:q[1],code:q[2]})}</div>`}).join("")||"<p>No mistakes to show.</p>"}
+function exFinish(){const E=EX;E.done=1;const n=E.qs.length,ok=E.qs.filter(z=>z.a!=null&&z.o[z.a][1]).length,sec=Math.round((Date.now()-E.t0)/1000),ls=exLS();
+  ls.last=[ok,n];ls.best=Math.max(ls.best||0,ok);try{localStorage.setItem("pyx",JSON.stringify(ls))}catch(e){}
+  const bm={2:[0,0],3:[0,0],4:[0,0],5:[0,0]},bt={};E.qs.forEach(z=>{const c=z.a!=null&&z.o[z.a][1]?1:0,m=z.q[0],t=z.q[1];bm[m][0]+=c;bm[m][1]++;(bt[t]=bt[t]||[0,0])[0]+=c;bt[t][1]++});
+  const weak=Object.entries(bt).filter(([t,v])=>v[0]<v[1]).sort((a,b)=>a[1][0]/a[1][1]-b[1][0]/b[1][1]).slice(0,4),pc=Math.round(100*ok/n),msg=pc>=90?"Excellent!":pc>=75?"Good job.":pc>=55?"Getting there. Review the topics below.":"Keep practising. Start with the lessons below.";
+  let h=`<h1>Exam result</h1><div class="big">${ok} / ${n}</div><p><b>${pc}%</b> · ${msg} <span class="mu">Time: ${Math.floor(sec/60)}:${String(sec%60).padStart(2,"0")}</span></p><div class="grid">${[2,3,4,5].map(m=>`<div class="card" style="cursor:default"><b>Module ${m}</b><small>${bm[m][0]} of ${bm[m][1]} correct</small><div class="meter"><i style="width:${100*bm[m][0]/bm[m][1]}%"></i></div></div>`).join("")}</div>`;
+  h+=weak.length?`<h2>Review these topics</h2>`+weak.map(([t,v])=>`<p>${esc(TOP[t][1])}: ${v[0]} of ${v[1]} correct. <button class="btn" data-l="${t}">📖 Lesson</button> <button class="btn" data-p="${t}">Practice</button></p>`).join(""):`<p>No mistakes. Every question was correct.</p>`;
+  A.innerHTML=h+`<h2>Review: all questions with the correct answers</h2><div class="exb"><button class="btn" data-ex="all">All questions</button><button class="btn" data-ex="wrong">Only my mistakes</button></div><div id="exrev"></div><div class="exb"><button class="btn p" data-ex="start">New exam</button><button class="btn" data-ex="menu">Back to menu</button></div>`;window.scrollTo(0,0);exRev(0)}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-ex]");if(!b)return;const v=b.dataset.ex;
+  if(v=="start")return exStart();if(v=="menu"){EX=null;return menu()}
+  if(!EX)return;const E=EX,n=E.qs.length,un=E.qs.filter(z=>z.a==null).length;
+  if(v=="all"||v=="wrong")return exRev(v=="wrong"?1:0);
+  if(E.done)return;
+  if(v.startsWith("pick:")){E.qs[E.i].a=+v.slice(5);E.warn=0;exDraw(1)}
+  else if(v.startsWith("go:")){E.i=+v.slice(3);exDraw()}
+  else if(v=="next"){E.i=Math.min(n-1,E.i+1);exDraw()}
+  else if(v=="prev"){E.i=Math.max(0,E.i-1);exDraw()}
+  else if(v=="finish"){if(un&&!E.warn){E.warn=1;exDraw(1);window.scrollTo(0,document.body.scrollHeight)}else exFinish()}
+  else if(v=="finish2")exFinish()});
+document.addEventListener("keydown",e=>{const k="abcd".indexOf(e.key.toLowerCase());if(EX&&!EX.done&&e.key.length==1&&k>-1&&document.querySelector(".xopt")){EX.qs[EX.i].a=k;EX.warn=0;exDraw(1)}});
+const MODS={2:"Conditionals, iterations and error handling",3:"Containers",4:"Functions and files",5:"Object-oriented programming"};
+let rd=new Set();try{rd=new Set(JSON.parse(localStorage.getItem("pyread")||"[]"))}catch(e){}
+const saveR=()=>{try{localStorage.setItem("pyread",JSON.stringify([...rd]))}catch(e){}};
+function setTab(t){window.scrollTo(0,0);$("#nav").innerHTML=`<button class="tab${t=="p"?" on":""}" id="tp">Practice</button><button class="tab${t=="l"?" on":""}" id="tl">Learn</button>${authed()?`<button class="tab out" id="lo">Log out</button>`:`<button class="tab out lk" id="lo">🔒 Log in</button>`}`;$("#tp").onclick=menu;$("#tl").onclick=learn;$("#lo").onclick=authed()?logout:()=>loginPage()}
+function go(t,o){if(!free(t))return loginPage(TOP[t][1]);onlyOpen=!!o;tp0=t;n=0;sess=0;sinceOpen=0;setTab("p");next()}
+function advice(){
+ const R_=TOP.map((t,k)=>({k,n:(hist[k]||[]).length,s:score(k),m:t[0],name:t[1]})).filter(r=>free(r.k)),tr=R_.filter(r=>r.n>=5),
+ li=(r,tx)=>`<div class="ar"><div><b>${r.name}</b> ${r.s==null?"":"("+r.s+"%)"}<br><span class="mu">${tx}</span></div><div><button class="btn" data-l="${r.k}">Read lesson</button> <button class="btn p" data-p="${r.k}">Practise</button></div></div>`;
+ let h=`<b>Your learning advice</b>`;
+ if(!tr.length){const nx=R_.find(r=>!rd.has(r.k))||R_[0];return`<div class="adv">${h}<p class="mu">There are not enough results yet (answer at least 5 questions on a topic). Suggested start:</p>${li(nx,"Read the lesson first, then answer 5 or more questions.")}</div>`}
+ const weak=tr.filter(r=>r.s<70).sort((a,b)=>a.s-b.s),mid=tr.filter(r=>r.s>=70&&r.s<90),best=tr.filter(r=>r.s>=90),fresh=R_.filter(r=>r.n<5),
+ ms=[2,3,4,5].map(m=>{const x=tr.filter(r=>r.m==m);return x.length?[m,Math.round(sum(x.map(r=>r.s))/x.length)]:null}).filter(Boolean).sort((a,b)=>a[1]-b[1]);
+ if(ms.length>1)h+=`<p class="mu">Weakest module so far: Module ${ms[0][0]} (${ms[0][1]}% average). Strongest: Module ${ms[ms.length-1][0]} (${ms[ms.length-1][1]}%).</p>`;
+ weak.slice(0,3).forEach(r=>h+=li(r,!rd.has(r.k)?"Read the lesson first (you have not opened it yet), then practise again.":r.s<40?"Go back to the basics: re-read the lesson slowly, trace every example by hand, then practise in small steps and read each explanation after a wrong answer.":"Re-read the parts of the lesson you find hard, then practise again. Compare your mistakes with the explanations to find the pattern."));
+ mid.slice(0,2).forEach(r=>h+=li(r,"Almost there. A few more rounds should get you above 90%. Watch small details such as off-by-one errors and the order of operations."));
+ if(fresh.length&&weak.length<2)fresh.slice(0,2).forEach(r=>h+=li(r,"Not enough results yet: answer 5 questions to get a score."));
+ if(best.length)h+=`<p class="mu">Mastered (90%+): ${best.map(r=>r.name).join(", ")}.${best.length>=3||!weak.length?" Try the coding assignments (open questions) to apply it.":""}</p>`;
+ if(!weak.length&&!mid.length)h+=`<p><b>Great work!</b> Everything you tried is above 90%. ${fresh.length?"Continue with a new topic.":"Try Mixed practice or the open questions."}</p>`;
+ return`<div class="adv">${h}</div>`}
+function learn(){setTab("l");let h=`<h1>📘 Learn</h1><p class="mu">Read a lesson before you practise: each one explains the syntax with small examples. Then answer at least 5 questions on the topic and check your advice below.</p>${advice()}`;
+ [2,3,4,5].forEach(m=>{h+=`<h2>Module ${m}: ${MODS[m]}</h2><div class="grid">`;TOP.forEach((t,k)=>{if(t[0]==m)h+=free(k)?`<button class="card" data-l="${k}"><b>${t[1]}</b><small>${rd.has(k)?"✓ read":"Not read yet"}</small>${meter(k)}</button>`:lockCard(k,"data-l")});h+="</div>";if(m==2)h+=limBanner()});
+ A.innerHTML=h}
+function lesson(k){if(!free(k))return loginPage(TOP[k][1]);setTab("l");rd.add(k);saveR();const d=LES[k],t=TOP[k];
+ A.innerHTML=`<div class="bar"><button class="btn" id="bk">← All lessons</button><span class="mu">Module ${t[0]}</span></div><h1>${t[1]}</h1><p>${esc(d[0])}</p>`+cinfo(k)+`<h2>Examples</h2>`+nbBar(k)+d[1].concat(EXTRA[k]||[]).map(([c,x],i)=>nbCell(k,i,c,x)).join("")+refTable(k)+`<div class="fb ok"><b>Watch out</b><ul>${d[2].map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div class="bar"><button class="btn p" data-p="${k}">Practise this topic →</button><span>${k>0?`<button class="btn" data-l="${k-1}">← Previous</button> `:""}${k<TOP.length-1?`<button class="btn" data-l="${k+1}">Next lesson →</button>`:""}</span></div>`;
+ $("#bk").onclick=learn;window.scrollTo(0,0)}
+const NM=["Ana","Bob","Cem","Dia","Eli","Fay"];
+const G5=[[],[],[],[],[]];
+const GL5=[
+[/\bclass \w+/,"class Name:","defines a new class, a blueprint for objects. The indented block holds its attributes and methods."],
+[/def __init__\(/,"def __init__(self, ...)","runs automatically when an object is created, e.g. Rect(3, 4). It sets the starting attributes of the new object."],
+[/\bself\b/,"self","is the object a method is working on. It is always the first parameter; Python fills it in when you call obj.method()."],
+[/\bself\.\w+\s*([-+*]?=)/,"self.attr = value","creates or changes an attribute of this object (an instance attribute). Every object has its own copy."],
+[null,"class attribute","is a variable written directly in the class body. It is shared by all objects; Name.attr reads or changes it for everyone.",(c,l)=>/^class \w+[^\n]*:\n(?:[ ]{4}\w+ = [^\n]*\n)+/m.test(c)],
+[null,"obj.method()","calls a method of that object; Python passes the object as self automatically.",(c,l)=>/^class /m.test(c)&&/\b[a-z_]\w*(\(\))?\.[a-z_]\w*\(/.test(c.replace(/^\s*def .*$/gm,""))],
+[/class \w+\s*\(\s*\w+\s*\)/,"class Child(Parent):","inherits all attributes and methods of Parent. The child can add new ones or override existing ones."],
+[/\bsuper\(\)/,"super()","gives access to the parent class: super().__init__(...) runs the parent's __init__ and super().method() the parent's version of a method."],
+[/@classmethod/,"@classmethod","makes a method that gets the class (cls) instead of an object. Often used to create objects in another way: cls(...)."],
+[/@staticmethod/,"@staticmethod","makes a plain function inside a class: it gets neither self nor cls."],
+[/\bcls\b/,"cls","is the class itself inside a class method: cls.attr changes a class attribute and cls(...) creates an object."],
+[/\bisinstance\(/,"isinstance(obj, Class)","is True when obj was made from Class or from a subclass of it."],
+[/\bissubclass\(/,"issubclass(A, B)","is True when A is B or inherits from B."],
+[/def __(str|repr|add|eq|len)__\(/,"__str__, __add__, __eq__ ...","are special methods: Python calls them for print(obj), obj + other, obj == other and so on, so your own objects work with normal syntax."],
+[/\b(hasattr|getattr|setattr)\(/,"hasattr / getattr / setattr","check, read or set an attribute by its name (a string)."],
+[/\.__dict__|\bvars\(/,"obj.__dict__","is a dictionary with the instance attributes of the object."],
+[/\.__mro__/,"Class.__mro__","is the order in which Python searches the classes for a method: the class itself first, then its parents."],
+[/\.__name__/,"__name__","is the name of a class or function as a string."],
+[/\bpass\b/,"pass","does nothing; it fills an empty block, for example an empty class."]
+];
+const OOPLES=[["",[],[]],["",[],[]],["",[],[]],["",[],[]],["",[],[]]];const OOPREF=["","","","",""];const OOPOPEN=[];const OOPEXAM=[];const OOPNBX={};
+let oopDone=0;
+function oopInit(){if(oopDone)return;oopDone=1;
+  TOP.push([5,"Classes, objects & __init__"],[5,"Class properties"],[5,"Class methods"],[5,"Inheritance"],[5,"Polymorphism"]);
+  G5.forEach(a=>G.push(a));OOPLES.forEach(l=>LES.push(l));OOPREF.forEach(x=>REFD.push(x));OOPOPEN.forEach(o=>OPEN.push(o));OOPEXAM.forEach(q=>EXAM.push(q));
+  Object.assign(NBX,OOPNBX);GL.unshift(...GL5);oop2Init()}
+const G6=[[],[],[],[]];
+const G6X={12:[],13:[],14:[]};
+const GL6=[
+[/self\.__\w+/,"self.__name","is a private attribute: two leading underscores. Inside the class Python stores it as _ClassName__name, so it cannot be used directly from outside the class."],
+[/def __(?!\w*__\()\w+\(/,"def __method(self)","is a private method: it can only be called inside the class, as self.__method()."],
+[/\b_[A-Z]\w*__\w+/,"_Class__name","is the real (mangled) name of a private attribute or method. It still works from outside, because Python privacy is a convention."],
+[/def (get|set)_\w+\(/,"getter / setter","a getter returns the value of a private attribute, a setter changes it after checking it (validation)."],
+[/def __(lt|contains|call)__\(/,"__lt__ / __contains__ / __call__","are special methods: __lt__ for a < b (and for sorted), __contains__ for item in obj, __call__ to call the object like a function."],
+[null,"sorted() with your own objects","uses your __lt__ method to compare the objects.",(c,l)=>/\bsorted\(/.test(c)&&/def __lt__/.test(c)],
+[/\brepr\(/,"repr(obj)","gives the developer text of an object (its __repr__)."],
+[null,"class inside a class","is an inner class. Create it through an outer object (outer.Inner()) or through the class name (Outer.Inner()). It does not see the outer object unless you pass it in.",(c,l)=>/^class \w+[^\n]*:\n(?:[ ]+\S[^\n]*\n|\n)*?[ ]+class \w+/m.test(c)],
+[/self\.[A-Z]\w*\(/,"self.Inner()","creates an object of an inner class from inside a method of the outer class."],
+[null,"self.part = Part(...)","is composition: the object creates and owns another object (has-a). Its methods can pass the work on, e.g. self.part.method().",(c,l)=>/self\.\w+ = [A-Z]\w*\(/.test(c)],
+[/\bdel\s+\w+(\.\w+)?\s*$/m,"del name / del obj.attr / del Class.method","removes a variable, an attribute or a method. After del obj the name no longer exists (NameError). After del Class.method every object of the class loses that method."],
+[/\b(AttributeError|NameError)\b/,"AttributeError / NameError","AttributeError: the object has no such attribute or method (also for private names used outside the class). NameError: the name does not exist, for example after del."]
+];
+const OOP2LES={"les":[["",[],[]],["",[],[]],["",[],[]],["",[],[]]],"extra":{}};const OOP2REF=["","","",""];const OOP2REFX={};const OOP2OPEN=[];const OOP2EXAM=[];const OOP2NBX={};
+let oop2Done=0;
+function oop2Init(){if(oop2Done)return;oop2Done=1;
+  TOP.push([5,"Encapsulation"],[5,"Magic methods"],[5,"Inner classes"],[5,"Composition"]);
+  G6.forEach(a=>G.push(a));OOP2LES.les.forEach(l=>LES.push(l));OOP2REF.forEach(x=>REFD.push(x));
+  Object.entries(OOP2REFX).forEach(([k,v])=>{REFD[k]+=v});
+  Object.entries(G6X).forEach(([k,a])=>G[k].push(...a));
+  Object.entries(OOP2LES.extra).forEach(([k,c])=>{EXTRA[k]=(EXTRA[k]||[]).concat(c)});
+  OOP2OPEN.forEach(o=>OPEN.push(o));OOP2EXAM.forEach(q=>EXAM.push(q));
+  Object.assign(NBX,OOP2NBX);GL.unshift(...GL6)}
+const $=s=>document.querySelector(s),A=$("#app"),esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let hist={};try{hist=JSON.parse(localStorage.getItem("pyq")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("pyq",JSON.stringify(hist))}catch(e){}};
+const score=t=>{const h=hist[t]||[];return h.length?Math.round(100*sum(h)/h.length):null};
+const level=t=>{const h=hist[t]||[],s=score(t);return s==null?"Not started":h.length<5?"Keep going…":s<40?"Beginner":s<70?"Getting there":s<90?"Good":"Mastered"};
+const seen=new Set();let tp0=null,cur=null,opts=[],done=0,n=0,sess=0;
+function gen(t){for(let k=0;k<30;k++){const g=pk(G[t]),[code,ans,c,why]=g();if(seen.has(code))continue;seen.add(code);
+  let w=shuf([...new Set(c.map(String))].filter(x=>x!=ans&&x!=="")).slice(0,3);
+  for(const x of["Nothing is printed","The program crashes with an error","None"])if(w.length<3&&x!=ans&&!w.includes(x))w.push(x);
+  return{t,code,ans,w,why}}seen.clear();return gen(t)}
+const KW=/(#.*)|("[^"]*"|'[^']*')|\b(def|return|if|elif|else|for|in|while|match|case|try|except|finally|lambda|yield|nonlocal|and|or|not|break|continue|del|True|False)\b|\b(print|range|len|sum|int|list|filter|map|set|next)\b|\b(\d+(?:\.\d+)?)\b/g;
+function draw(cv,code){const av=(cv.parentElement&&cv.parentElement.clientWidth)||0;let fs=15;if(av){const c0=cv.getContext("2d");c0.font="15px ui-monospace,Menlo,Consolas,monospace";const w0=Math.max(...code.split("\n").map(l=>l.length))*c0.measureText("M").width+32;if(w0>av)fs=Math.max(11,Math.floor(15*av/w0*10)/10)}const f=fs+'px ui-monospace,Menlo,Consolas,monospace',lh=Math.round(fs*1.53),pad=16,d=window.devicePixelRatio||1,Ls=code.split("\n"),c=cv.getContext("2d");c.font=f;
+  const cw=c.measureText("M").width,w=Math.ceil(Math.max(...Ls.map(l=>l.length))*cw+pad*2),h=Ls.length*lh+pad*2-4;
+  cv.width=w*d;cv.height=h*d;cv.style.width=w+"px";cv.style.height=h+"px";c.scale(d,d);c.fillStyle="#f3f4f6";c.fillRect(0,0,w,h);
+  Ls.forEach((l,r)=>{let x=pad,y=pad+r*lh+14,pos=0,m;KW.lastIndex=0;const put=(t,col,b)=>{c.fillStyle=col;c.font=(b?"bold ":"")+f;c.fillText(t,x,y);x+=t.length*cw};
+    while((m=KW.exec(l))){if(m.index>pos)put(l.slice(pos,m.index),"#1f2937");put(m[0],m[1]?"#6b8e8e":m[2]?"#b22222":m[3]?"#007a00":m[4]?"#0057b8":"#9333ea",!!m[3]);pos=KW.lastIndex}
+    if(pos<l.length)put(l.slice(pos),"#1f2937")})}
+const meter=t=>{const s=score(t);return`<div class="meter"><i style="width:${s||0}%"></i></div><small>${s==null?"":s+"% · "}${level(t)}</small>`};
+function menu(){oopInit();setTab("p");let h=`<h1>🐍 Python Practice</h1><p class="mu">Read the code, then pick the correct output (A–D). Every question is freshly generated, so you can practise a topic as long as you like. Your score per topic is the share of correct answers in your last 20 multiple-choice questions. Now and then an open coding question appears: write your own code and compare it with an example (open questions are not scored). New to a topic? Open the <b>Learn</b> tab first.</p>${advice()}`;
+  [2,3,4,5].forEach(m=>{h+=`<h2>Module ${m}</h2><div class="grid">`;TOP.forEach((t,k)=>{if(t[0]==m)h+=free(k)?`<button class="card" data-t="${k}"><b>${t[1]}</b>${meter(k)}</button>`:lockCard(k,"data-t")});h+=`</div>`;if(m==2)h+=limBanner()});
+  const au=authed();A.innerHTML=h+`<button class="btn all" data-t="all">Mixed practice (${au?"all topics":"Module 2"})</button><button class="btn all" data-t="open" style="background:var(--card);color:var(--tx);border:1px solid var(--ln);margin-top:8px">Coding assignments (${au?"open questions":"Module 2"})</button>${au?exMenu():`<button class="btn all lock" data-unlock="the practice exam" style="margin-top:8px;background:#334155;color:#fff;border:0">🔒 Practice exam · log in to unlock</button>`}`;
+  A.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{onlyOpen=b.dataset.t=="open";tp0=b.dataset.t=="all"||onlyOpen?null:+b.dataset.t;n=0;sess=0;sinceOpen=0;next()})}
+function next(){window.scrollTo(0,0);if(onlyOpen||(sinceOpen>=3&&Math.random()<.5)){const o=pickOpen(tp0);if(o){sinceOpen=0;return showOpen(o)}}sinceOpen++;const t=tp0==null?pk(TOP.map((x,k)=>k).filter(free)):tp0;cur=gen(t);done=0;n++;
+  opts=shuf([[cur.ans,1],...cur.w.map(x=>[x,0])]);
+  let h=`<div class="bar"><button class="btn" id="m">← Menu</button><span class="mu">${tp0==null?"Mixed practice":TOP[tp0][1]} · question ${n}</span></div>
+  <div class="sc"><div><b>${TOP[cur.t][1]}</b><span id="sv">${score(cur.t)==null?"–":score(cur.t)+"%"} · ${level(cur.t)}</span></div><div class="meter"><i id="sb" style="width:${score(cur.t)||0}%"></i></div></div>
+  <p><b>What is the output of this code?</b></p><div class="img"><canvas id="cv" role="img" aria-label="Python code"></canvas></div>`;
+  opts.forEach((o,k)=>h+=`<button class="btn opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><pre>${esc(o[0])}</pre></button>`);
+  A.innerHTML=h+`<div id="fb"></div>`;draw($("#cv"),cur.code);$("#m").onclick=menu;A.querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(+b.dataset.k))}
+function pick(k){if(done)return;done=1;const ok=opts[k][1];
+  (hist[cur.t]=hist[cur.t]||[]).push(ok);hist[cur.t]=hist[cur.t].slice(-20);save();
+  A.querySelectorAll(".opt").forEach((b,j)=>{b.disabled=true;if(opts[j][1])b.classList.add("ok");else if(j==k)b.classList.add("bad")});
+  $("#sv").textContent=score(cur.t)+"% · "+level(cur.t);$("#sb").style.width=score(cur.t)+"%";
+  $("#fb").innerHTML=`<div class="fb ${ok?"ok":"bad"}"><b>${ok?"Correct! ✓":"Wrong ✗ — the correct answer is "+"ABCD"[opts.findIndex(o=>o[1])]}</b>${esc(cur.why)}${syn(cur)}</div><button class="btn p" id="nx">Next question →</button>`;
+  $("#nx").onclick=next;$("#nx").focus()}
+A.addEventListener("click",e=>{const b=e.target.closest("[data-l],[data-p]");if(!b)return;if(b.dataset.l!=null)lesson(+b.dataset.l);else go(+b.dataset.p)});document.addEventListener("keydown",e=>{const k="abcd".indexOf(e.key.toLowerCase());if(e.key.length==1&&k>-1&&$(".opt")&&!done)pick(k)});
+// ==== Free public page: accounts (Supabase) and payment (Stripe Checkout) ====
+// Modules 3-5 are NOT in this page. After login, the backend checks that the account
+// has paid and only then sends the full app, which is shown in a frame over this page.
+const CFG={"supabaseUrl":"https://YOUR-PROJECT-REF.supabase.co","supabaseAnonKey":"YOUR-SUPABASE-ANON-OR-PUBLISHABLE-KEY","priceLabel":"€5"};
+const SB=window.supabase&&CFG.supabaseUrl.indexOf("YOUR-")<0?window.supabase.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey):null;
+let ME=null; // logged-in user who has not paid (yet)
+const here=()=>location.origin+location.pathname;
+const authed=()=>false;
+const free=k=>TOP[k][0]==2;
+const lockCard=k=>`<button class="card lock" data-unlock="${esc(TOP[k][1])}" aria-label="${esc(TOP[k][1])} (locked, full access needed)"><b>🔒 ${TOP[k][1]}</b><small>Full access</small></button>`;
+const limBanner=()=>`<div class="lim"><p><b>🔒 Free version</b><br>Only <b>Module 2</b> is free. Full access (${esc(CFG.priceLabel)}, one-time payment) unlocks Modules 3–5, mixed practice across all topics and the practice exam.</p><button class="btn p" data-unlock="">${ME?"Get full access":"Log in or create an account"}</button></div>`;
+document.addEventListener("click",e=>{const b=e.target.closest("[data-unlock]");if(b){e.stopPropagation();loginPage(b.dataset.unlock)}},true);
+function logout(){if(SB)SB.auth.signOut().finally(()=>{ME=null;menu()});else menu()}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+async function api(name,method){const{data:{session}}=await SB.auth.getSession();if(!session)return null;
+  return fetch(`${CFG.supabaseUrl}/functions/v1/${name}`,{method:method||"GET",headers:{Authorization:`Bearer ${session.access_token}`,apikey:CFG.supabaseAnonKey}})}
+// Ask the backend for the full app. Returns "ok", "unpaid", "none" (not logged in) or "error".
+async function openFull(){if(!SB)return"error";let r;try{r=await api("app")}catch(e){return"error"}
+  if(!r)return"none";if(r.status==402)return"unpaid";if(r.status==401)return"none";if(!r.ok)return"error";
+  const html=await r.text(),f=document.createElement("iframe");
+  f.id="full";f.title="Python Practice";f.style.cssText="position:fixed;inset:0;width:100%;height:100%;border:0";
+  f.onload=()=>f.contentWindow.focus();f.srcdoc=html;
+  document.body.innerHTML="";document.body.style.margin="0";document.body.style.overflow="hidden";document.body.appendChild(f);return"ok"}
+window.addEventListener("message",e=>{const f=document.getElementById("full");
+  if(f&&e.source===f.contentWindow&&e.data&&e.data.pyApp=="logout")SB.auth.signOut().finally(()=>location.reload())});
+function note(title,text,btn,fn){$("#nav").innerHTML="";A.innerHTML=`<div class="login"><h1>${title}</h1><p id="nt">${text}</p>${btn?`<button class="btn p" id="nb">${btn}</button>`:""}</div>`;if(btn)$("#nb").onclick=fn}
+async function afterLogin(what){ME=(await SB.auth.getUser()).data.user;const s=await openFull();
+  if(s=="ok")return;if(s=="unpaid")return payPage(what);
+  note("⚠️ Something went wrong","Could not check your account right now. Try again in a moment.","← Back",menu)}
+function loginPage(what){window.scrollTo(0,0);
+  if(!SB)return note("🔒 Full access","Accounts are not available right now. Try again later.","← Back",menu);
+  if(ME)return payPage(what);
+  let mode="in",em="";
+  const draw=()=>{$("#nav").innerHTML="";const up=mode=="up";
+    A.innerHTML=`<form class="login" id="lf" novalidate><h1>🐍 Python Practice</h1><p class="mu">${what?`<b>${esc(what)}</b> is part of full access. `:""}${up?`Create an account, then pay ${esc(CFG.priceLabel)} once for full access.`:"Log in to your account."} Module 2 is always free.</p>
+    <label for="le">Email</label><input id="le" type="email" autocomplete="username" required value="${esc(em)}">
+    <label for="lp">Password${up?" (at least 8 characters)":""}</label><input id="lp" type="password" autocomplete="${up?"new-password":"current-password"}" required>
+    <div class="lerr" id="lx" role="alert"></div><button class="btn p" type="submit" id="ls">${up?"Create account":"Log in"}</button>
+    <button class="ghost" type="button" id="lm">${up?"Already have an account? Log in":"No account yet? Create one"}</button>${up?"":`<button class="ghost" type="button" id="lr">Forgot password?</button>`}
+    <button class="ghost" type="button" id="lb">← Continue with the free version (Module 2)</button></form>`;
+    const msg=t=>{$("#lx").textContent=t};
+    $("#lb").onclick=menu;$("#lm").onclick=()=>{em=$("#le").value.trim();mode=up?"in":"up";draw()};
+    if(!up)$("#lr").onclick=async()=>{const e=$("#le").value.trim().toLowerCase();if(!e)return msg("Enter your email first, then click “Forgot password?”.");
+      const{error}=await SB.auth.resetPasswordForEmail(e,{redirectTo:here()});msg(error?error.message:"If this account exists, we sent you an email with a link to choose a new password.")};
+    (em?$("#lp"):$("#le")).focus();
+    $("#lf").onsubmit=async e=>{e.preventDefault();const mail=$("#le").value.trim().toLowerCase(),pw=$("#lp").value;
+      if(!mail||!pw)return msg("Enter your email and password.");if(up&&pw.length<8)return msg("Use a password of at least 8 characters.");
+      $("#ls").disabled=true;msg("");
+      try{if(up){const{data,error}=await SB.auth.signUp({email:mail,password:pw,options:{emailRedirectTo:here()}});if(error)throw error;
+          if(!data.session)return note("📧 Check your email",`We sent a confirmation link to <b>${esc(mail)}</b>. Click it, then log in and pay to unlock everything.`,"OK",()=>{em=mail;mode="in";draw()})}
+        else{const{error}=await SB.auth.signInWithPassword({email:mail,password:pw});if(error)throw error}
+        await afterLogin(what)}
+      catch(err){msg(/invalid login/i.test(err.message)?"Incorrect email or password.":err.message||"Something went wrong.");$("#ls").disabled=false;$("#lp").value="";$("#lp").focus()}}};
+  draw()}
+function payPage(what){$("#nav").innerHTML="";window.scrollTo(0,0);
+  A.innerHTML=`<div class="login"><h1>🔓 Full access</h1><p class="mu">Logged in as <b>${esc(ME.email)}</b></p><p>${what?`<b>${esc(what)}</b> is part of full access. `:""}Pay <b>${esc(CFG.priceLabel)}</b> once to unlock Modules 3–5, mixed practice and the practice exam on this account. You pay with iDEAL or card on Stripe's secure payment page; your account unlocks automatically afterwards.</p>
+  <div class="lerr" id="lx" role="alert"></div><button class="btn p" id="pay">Pay ${esc(CFG.priceLabel)} →</button><button class="ghost" id="lb">← Continue with the free version (Module 2)</button><button class="ghost" id="lo">Log out</button></div>`;
+  $("#lb").onclick=menu;$("#lo").onclick=logout;
+  $("#pay").onclick=async()=>{$("#pay").disabled=true;$("#lx").textContent="";
+    try{const r=await api("create-checkout","POST");if(!r)return loginPage(what);const j=await r.json();
+      if(j.paid){if(await openFull()=="ok")return}if(!r.ok||!j.url)throw new Error(j.error||"Could not start the payment.");location.href=j.url}
+    catch(e){$("#lx").textContent=e.message;$("#pay").disabled=false}}}
+function newPassword(){$("#nav").innerHTML="";
+  A.innerHTML=`<form class="login" id="nf" novalidate><h1>🔑 New password</h1><label for="np">New password (at least 8 characters)</label><input id="np" type="password" autocomplete="new-password" required><div class="lerr" id="lx" role="alert"></div><button class="btn p" type="submit">Save password</button></form>`;
+  $("#np").focus();$("#nf").onsubmit=async e=>{e.preventDefault();const pw=$("#np").value;if(pw.length<8)return $("#lx").textContent="Use at least 8 characters.";
+    const{error}=await SB.auth.updateUser({password:pw});if(error)return $("#lx").textContent=error.message;await afterLogin("")}}
+async function boot(){if(!SB)return;let recovery=/type=recovery/.test(location.hash);
+  SB.auth.onAuthStateChange(ev=>{if(ev=="PASSWORD_RECOVERY"){recovery=true;setTimeout(newPassword,0)}});
+  const q=new URLSearchParams(location.search),paid=q.has("paid");if(paid||q.has("cancel"))history.replaceState(null,"",here());
+  const{data:{session}}=await SB.auth.getSession();if(!session||recovery)return;ME=session.user;
+  if(paid){note("✅ Payment received","Unlocking full access…");
+    for(let i=0;i<20;i++){const s=await openFull();if(s=="ok")return;if(s!="unpaid")break;await wait(2000)}
+    return note("⏳ Almost there","Your payment is still being processed. Refresh this page in a minute. If it stays locked, contact the app owner with the email address of your account.","Refresh",()=>location.reload())}
+  if(await openFull()!="ok")menu()}
+setTimeout(boot,0);
+
+G.forEach(a=>a.forEach(g=>{}));menu();
+</script></body></html>
