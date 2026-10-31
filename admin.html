@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex, nofollow">
+<title>Access Key Control</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#111827;--mu:#6b7280;--ln:#d1d5db;--ac:#0f766e;--ok:#047857;--okb:#d1fae5;--bad:#b91c1c;--badb:#fee2e2}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1318;--card:#1a2029;--tx:#e5e7eb;--mu:#9ca3af;--ln:#374151;--ac:#2dd4bf;--ok:#6ee7b7;--okb:#064e3b;--bad:#fca5a5;--badb:#7f1d1d}}
+:root[data-theme="dark"]{--bg:#0f1318;--card:#1a2029;--tx:#e5e7eb;--mu:#9ca3af;--ln:#374151;--ac:#2dd4bf;--ok:#6ee7b7;--okb:#064e3b;--bad:#fca5a5;--badb:#7f1d1d}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
+main{max-width:820px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:24px;margin:4px 0}h2{font-size:15px;color:var(--ac);text-transform:uppercase;letter-spacing:.05em;margin:0 0 10px}
+.mu{color:var(--mu)}
+.box{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:18px;margin:14px 0}
+.login{max-width:380px;margin:8vh auto 0}
+label{display:block;font-size:14px;font-weight:600;margin:12px 0 4px}
+input,select{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--ln);border-radius:10px;background:var(--bg);color:var(--tx)}
+input:focus,select:focus{outline:2px solid var(--ac);border-color:var(--ac)}
+.btn{font:inherit;padding:9px 14px;min-height:44px;border-radius:10px;border:1px solid var(--ln);background:var(--card);color:var(--tx);cursor:pointer}
+.btn.p{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:600}
+.btn.s{min-height:34px;padding:3px 10px;font-size:13px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}.row>div{flex:1 1 150px}
+.seg{display:flex;gap:6px;margin-top:4px}.seg .btn{flex:1}.seg .btn.on{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:600}
+.err{color:var(--bad);background:var(--badb);border-radius:8px;padding:8px 10px;margin-top:12px;font-size:14px}.err:empty{display:none}
+.okm{background:var(--okb);border-radius:8px;padding:8px 10px;margin-top:12px;font-size:14px}.okm:empty{display:none}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.key{border:1px solid var(--ln);border-radius:10px;padding:10px 12px;margin-top:10px}
+.key code{display:block;font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;word-break:break-all;background:var(--bg);border-radius:6px;padding:6px 8px;margin:6px 0}
+.key .meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:14px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:10px}
+.tag.on{background:var(--okb);color:var(--ok)}.tag.off{background:var(--badb);color:var(--bad)}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.warn{font-size:13px;color:var(--mu);margin-top:10px}
+@media(max-width:560px){.acts .btn{flex:1}}
+</style></head><body><main id="app"></main>
+<script>
+// Access keys are ECDSA P-256 signatures. The private signing key below is encrypted
+// with the admin email + password (PBKDF2 600k + AES-GCM); only the public key is in index.html.
+const ADMIN_EMAIL="siemhotting@gmail.com";
+const VAULT={salt:"1P5enmj-dzvcK9XaYuUBXA",iv:"XI4r_mFvSj5kWEiB",ct:"0KovpcOBKRF6VG29D8X0QUQlFwYznRKtvC6grtSZ6-lpsEwRDGw6Xu2s17ZfqSmzufvBKDOeN0fzl-pPwy2DICXQhuRKNNHlyY1KiJfJtuQSb5wUxOwOgJgp6CX0v-qnqyNXa5l6gI0XUIv-MNsYKy4LqxIw0orDLzeS0rtZGAC_Q1F0EK2l5Yhn_aU9HJz6WpCfMQXTw0GN4g"};
+const $=s=>document.querySelector(s),A=$("#app"),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ub=s=>Uint8Array.from(atob(s.replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0));
+const bu=b=>btoa(String.fromCharCode(...b)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+const fmt=ms=>new Date(ms).toLocaleString(undefined,{dateStyle:"medium",timeStyle:"short"});
+let SIGN=null;
+const HK="pyadmin_keys",hist=()=>{try{return JSON.parse(localStorage.getItem(HK)||"[]")}catch(e){return[]}},saveH=h=>{try{localStorage.setItem(HK,JSON.stringify(h))}catch(e){}};
+
+async function unlock(email,pw){
+  const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(email+":"+pw),"PBKDF2",false,["deriveKey"]);
+  const k=await crypto.subtle.deriveKey({name:"PBKDF2",salt:ub(VAULT.salt),iterations:600000,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pk=await crypto.subtle.decrypt({name:"AES-GCM",iv:ub(VAULT.iv)},k,ub(VAULT.ct));
+  return crypto.subtle.importKey("pkcs8",pk,{name:"ECDSA",namedCurve:"P-256"},false,["sign"])}
+
+// Key layout: [1 byte version][4 bytes expiry, unix seconds][4 bytes random] + 64-byte signature
+async function makeKey(expMs){
+  const p=new Uint8Array(9),dv=new DataView(p.buffer);p[0]=1;dv.setUint32(1,Math.floor(expMs/1000));crypto.getRandomValues(p.subarray(5));
+  const sig=new Uint8Array(await crypto.subtle.sign({name:"ECDSA",hash:"SHA-256"},SIGN,p));
+  const all=new Uint8Array(73);all.set(p);all.set(sig,9);return"PY1-"+bu(all)}
+
+function loginView(){
+  A.innerHTML=`<form class="box login" id="lf" novalidate><h1>🔑 Access Key Control</h1><p class="mu">Admin only. Log in to generate access keys.</p>
+  <label for="le">Email</label><input id="le" type="email" autocomplete="username">
+  <label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password">
+  <div class="err" id="lx" role="alert"></div><button class="btn p" style="width:100%;margin-top:16px" id="lb">Log in</button></form>`;
+  $("#le").focus();
+  $("#lf").onsubmit=async e=>{e.preventDefault();const em=$("#le").value.trim().toLowerCase(),pw=$("#lp").value;$("#lx").textContent="";
+    if(em!==ADMIN_EMAIL||!pw){$("#lx").textContent="Incorrect email or password.";return}
+    $("#lb").disabled=true;$("#lb").textContent="Checking…";
+    try{SIGN=await unlock(em,pw);mainView()}catch(err){$("#lx").textContent="Incorrect email or password.";$("#lb").disabled=false;$("#lb").textContent="Log in";$("#lp").value="";$("#lp").focus()}}}
+
+let mode="dur";
+function mainView(){
+  const now=new Date(Date.now()+7*864e5);now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
+  A.innerHTML=`<div class="bar"><h1>🔑 Access Key Control</h1><span><a class="btn s" href="index.html" style="text-decoration:none;display:inline-flex;align-items:center">Open website</a> <button class="btn s" id="out">Log out</button></span></div>
+  <div class="box"><h2>Generate keys</h2>
+   <div class="seg" role="group" aria-label="Validity"><button class="btn on" data-m="dur">Valid for…</button><button class="btn" data-m="date">Valid until date</button></div>
+   <div class="row" id="dur"><div><label for="n">Amount</label><input id="n" type="number" min="1" value="30"></div><div><label for="u">Unit</label><select id="u"><option value="h">Hours</option><option value="d" selected>Days</option><option value="w">Weeks</option><option value="m">Months</option><option value="y">Years</option></select></div></div>
+   <div class="row" id="dt" hidden><div><label for="until">Expires on</label><input id="until" type="datetime-local" value="${now.toISOString().slice(0,16)}"></div></div>
+   <div class="row"><div><label for="cnt">Number of keys</label><input id="cnt" type="number" min="1" max="50" value="1"></div><div style="flex:2 1 220px"><label for="note">Note (only saved here, e.g. who it's for)</label><input id="note" type="text" maxlength="80"></div></div>
+   <p class="mu" id="pv" style="margin:12px 0 0;font-size:14px"></p>
+   <div class="err" id="gx"></div><button class="btn p" id="gen" style="width:100%;margin-top:12px">Generate</button>
+   <div id="new"></div></div>
+  <div class="box"><div class="bar"><h2 style="margin:0">Generated keys</h2><span class="acts"><button class="btn s" id="hid">Hide expired</button><button class="btn s" id="clr">Clear expired</button></span></div><div id="list"></div>
+   <p class="warn">This list is stored only in this browser. Keys can't be revoked once given out: they work until they expire.</p></div>
+  <div class="box"><h2>Check a key</h2><input id="ck" placeholder="PY1-…" autocomplete="off"><div class="okm" id="cko"></div><div class="err" id="ckx"></div></div>`;
+  $("#out").onclick=()=>{SIGN=null;loginView()};
+  A.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{mode=b.dataset.m;A.querySelectorAll("[data-m]").forEach(x=>x.classList.toggle("on",x==b));$("#dur").hidden=mode!="dur";$("#dt").hidden=mode!="date";preview()});
+  ["n","u","until"].forEach(i=>$("#"+i).oninput=preview);preview();
+  $("#gen").onclick=generate;$("#hid").onclick=()=>{hideExp=!hideExp;list()};$("#clr").onclick=()=>{saveH(hist().filter(k=>k.exp>Date.now()));list()};
+  $("#ck").oninput=check;list()}
+
+function expiry(){
+  if(mode=="date"){const v=$("#until").value;return v?new Date(v).getTime():NaN}
+  const n=+$("#n").value,u=$("#u").value,d=new Date();if(!(n>0))return NaN;
+  if(u=="h")return Date.now()+n*36e5;if(u=="d")return Date.now()+n*864e5;if(u=="w")return Date.now()+n*6048e5;
+  if(u=="m"){d.setMonth(d.getMonth()+n);return d.getTime()}d.setFullYear(d.getFullYear()+n);return d.getTime()}
+function preview(){const e=expiry();$("#pv").textContent=e>Date.now()?"Keys will be valid until "+fmt(e)+".":"";}
+async function generate(){
+  const e=expiry(),c=Math.min(50,Math.max(1,+$("#cnt").value|0)),note=$("#note").value.trim();$("#gx").textContent="";
+  if(!(e>Date.now()))return $("#gx").textContent="Choose a validity that ends in the future.";
+  if(e/1000>=2**32)return $("#gx").textContent="That date is too far in the future.";
+  const h=hist(),made=[];for(let i=0;i<c;i++){const k={key:await makeKey(e),exp:Math.floor(e/1000)*1000,made:Date.now(),note};made.push(k);h.unshift(k)}
+  saveH(h);$("#new").innerHTML=`<p class="okm">${c} key${c>1?"s":""} created, valid until ${esc(fmt(e))}.</p>`+made.map(card).join("");list()}
+
+let hideExp=false;
+const link=k=>new URL("index.html",location.href).href+"?key="+encodeURIComponent(k);
+const card=k=>{const on=k.exp>Date.now();return`<div class="key"><div class="meta"><span>${on?'<span class="tag on">Active</span>':'<span class="tag off">Expired</span>'} ${k.note?"<b>"+esc(k.note)+"</b>":""}</span><span class="mu">Expires ${esc(fmt(k.exp))}</span></div><code>${esc(k.key)}</code><div class="acts"><button class="btn s" data-copy="${esc(k.key)}">Copy key</button><button class="btn s" data-copy="${esc(link(k.key))}">Copy link</button></div></div>`};
+function list(){const h=hist().filter(k=>!hideExp||k.exp>Date.now());$("#hid").textContent=hideExp?"Show expired":"Hide expired";
+  $("#list").innerHTML=h.length?h.map(card).join(""):'<p class="mu">No keys yet.</p>'}
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-copy]");if(!b)return;
+  try{await navigator.clipboard.writeText(b.dataset.copy);const t=b.textContent;b.textContent="Copied ✓";setTimeout(()=>b.textContent=t,1200)}catch(err){prompt("Copy:",b.dataset.copy)}});
+
+const PUB="BO0yclBx5Vg_aiRUD_IWOcsKGzM6NOq8-WlGM-2Xscy8jFEARunsmYtnvZ8xP0k-SUaEUuAMBiK7K_O3fUPQPoQ";
+async function check(){const v=$("#ck").value.trim();$("#cko").textContent="";$("#ckx").textContent="";if(!v)return;
+  try{const b=ub(v.replace(/^PY1-/,""));if(b.length!=73||b[0]!=1)throw 0;
+    const pk=await crypto.subtle.importKey("raw",ub(PUB),{name:"ECDSA",namedCurve:"P-256"},false,["verify"]);
+    if(!await crypto.subtle.verify({name:"ECDSA",hash:"SHA-256"},pk,b.slice(9),b.slice(0,9)))throw 0;
+    const exp=new DataView(b.buffer).getUint32(1)*1000;
+    if(exp>Date.now())$("#cko").textContent="Valid key — works until "+fmt(exp)+".";else $("#ckx").textContent="Genuine key, but it expired on "+fmt(exp)+"."}
+  catch(e){$("#ckx").textContent="Not a valid key."}}
+loginView();
+</script></body></html>

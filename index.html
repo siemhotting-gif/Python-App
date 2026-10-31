@@ -1144,7 +1144,7 @@ const EXAM=[[2,0,"a = 7\nb = 3\nc = a * b - 5\nif c > 15 and a % 2 == 1:\n    pr
 let EX=null;
 const exLS=()=>{try{return JSON.parse(localStorage.getItem("pyx")||"{}")}catch(e){return{}}};
 const exMenu=()=>{const l=exLS();return`<button class="btn all" data-ex="start" style="margin-top:8px;background:#334155;color:#fff;border:0">📝 Practice exam · 30 mixed questions</button><p class="mu" style="margin:4px 0 0;font-size:13px">No feedback while you answer. You get your score and all the correct answers at the end.${l.last?` Last result: ${l.last[0]}/${l.last[1]} · best: ${l.best}/${l.last[1]}.`:""}</p>`};
-function exStart(){if(!authed())return loginPage("the practice exam");const pk=(m,n)=>shuf(EXAM.filter(q=>q[0]==m)).slice(0,n);
+function exStart(){if(!full())return loginPage("the practice exam");const pk=(m,n)=>shuf(EXAM.filter(q=>q[0]==m)).slice(0,n);
   EX={qs:shuf(pk(2,11).concat(pk(3,7),pk(4,6),pk(5,6))).map(q=>({q,o:shuf([[q[3],1],...q[4].map(x=>[x,0])]),a:null})),i:0,t0:Date.now(),warn:0,done:0};exDraw()}
 function exDraw(keep){if(!keep)window.scrollTo(0,0);const E=EX,x=E.qs[E.i],n=E.qs.length,un=E.qs.filter(z=>z.a==null).length;
   let h=`<div class="bar"><button class="btn" data-ex="menu">← Menu</button><span class="mu">Practice exam · answered ${n-un} of ${n}</span></div><div class="prog"><i style="width:${(E.i+1)/n*100}%"></i></div><div class="exnav">${E.qs.map((z,j)=>`<button class="exn${j==E.i?" cur":""}${z.a!=null?" ans":""}" data-ex="go:${j}">${j+1}</button>`).join("")}</div><p><b>Question ${E.i+1} of ${n}: what is the output of this code?</b></p><div class="img"><canvas id="cv" role="img" aria-label="Python code"></canvas></div>`;
@@ -1176,7 +1176,7 @@ document.addEventListener("keydown",e=>{const k="abcd".indexOf(e.key.toLowerCase
 const MODS={2:"Conditionals, iterations and error handling",3:"Containers",4:"Functions and files",5:"Object-oriented programming"};
 let rd=new Set();try{rd=new Set(JSON.parse(localStorage.getItem("pyread")||"[]"))}catch(e){}
 const saveR=()=>{try{localStorage.setItem("pyread",JSON.stringify([...rd]))}catch(e){}};
-function setTab(t){window.scrollTo(0,0);$("#nav").innerHTML=`<button class="tab${t=="p"?" on":""}" id="tp">Practice</button><button class="tab${t=="l"?" on":""}" id="tl">Learn</button>${authed()?`<button class="tab out" id="lo">Log out</button>`:`<button class="tab out lk" id="lo">🔒 Log in</button>`}`;$("#tp").onclick=menu;$("#tl").onclick=learn;$("#lo").onclick=authed()?logout:()=>loginPage()}
+function setTab(t){window.scrollTo(0,0);$("#nav").innerHTML=`<button class="tab${t=="p"?" on":""}" id="tp">Practice</button><button class="tab${t=="l"?" on":""}" id="tl">Learn</button>${authed()?`<button class="tab out" id="lo">Log out</button>`:full()?`<button class="tab out" id="lo">🔑 Key</button>`:`<button class="tab out lk" id="lo">🔒 Unlock</button>`}`;$("#tp").onclick=menu;$("#tl").onclick=learn;$("#lo").onclick=authed()?logout:()=>loginPage()}
 function go(t,o){if(!free(t))return loginPage(TOP[t][1]);onlyOpen=!!o;tp0=t;n=0;sess=0;sinceOpen=0;setTab("p");next()}
 function advice(){
  const R_=TOP.map((t,k)=>({k,n:(hist[k]||[]).length,s:score(k),m:t[0],name:t[1]})).filter(r=>free(r.k)),tr=R_.filter(r=>r.n>=5),
@@ -1335,7 +1335,7 @@ function draw(cv,code){const av=(cv.parentElement&&cv.parentElement.clientWidth)
 const meter=t=>{const s=score(t);return`<div class="meter"><i style="width:${s||0}%"></i></div><small>${s==null?"":s+"% · "}${level(t)}</small>`};
 function menu(){oopInit();setTab("p");let h=`<h1>🐍 Python Practice</h1><p class="mu">Read the code, then pick the correct output (A–D). Every question is freshly generated, so you can practise a topic as long as you like. Your score per topic is the share of correct answers in your last 20 multiple-choice questions. Now and then an open coding question appears: write your own code and compare it with an example (open questions are not scored). New to a topic? Open the <b>Learn</b> tab first.</p>${advice()}`;
   [2,3,4,5].forEach(m=>{h+=`<h2>Module ${m}</h2><div class="grid">`;TOP.forEach((t,k)=>{if(t[0]==m)h+=free(k)?`<button class="card" data-t="${k}"><b>${t[1]}</b>${meter(k)}</button>`:lockCard(k,"data-t")});h+=`</div>`;if(m==2)h+=limBanner()});
-  const au=authed();A.innerHTML=h+`<button class="btn all" data-t="all">Mixed practice (${au?"all topics":"Module 2"})</button><button class="btn all" data-t="open" style="background:var(--card);color:var(--tx);border:1px solid var(--ln);margin-top:8px">Coding assignments (${au?"open questions":"Module 2"})</button>${au?exMenu():`<button class="btn all lock" data-unlock="the practice exam" style="margin-top:8px;background:#334155;color:#fff;border:0">🔒 Practice exam · log in to unlock</button>`}`;
+  const au=full();A.innerHTML=h+`<button class="btn all" data-t="all">Mixed practice (${au?"all topics":"Module 2"})</button><button class="btn all" data-t="open" style="background:var(--card);color:var(--tx);border:1px solid var(--ln);margin-top:8px">Coding assignments (${au?"open questions":"Module 2"})</button>${au?exMenu():`<button class="btn all lock" data-unlock="the practice exam" style="margin-top:8px;background:#334155;color:#fff;border:0">🔒 Practice exam · unlock with login or key</button>`}`;
   A.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{onlyOpen=b.dataset.t=="open";tp0=b.dataset.t=="all"||onlyOpen?null:+b.dataset.t;n=0;sess=0;sinceOpen=0;next()})}
 function next(){window.scrollTo(0,0);if(onlyOpen||(sinceOpen>=3&&Math.random()<.5)){const o=pickOpen(tp0);if(o){sinceOpen=0;return showOpen(o)}}sinceOpen++;const t=tp0==null?pk(TOP.map((x,k)=>k).filter(free)):tp0;cur=gen(t);done=0;n++;
   opts=shuf([[cur.ans,1],...cur.w.map(x=>[x,0])]);
@@ -1356,21 +1356,47 @@ const USERS={"siemhotting@gmail.com":"2a25cf07575237d5763a9befda6f50ef4af08533f3
 const sha256=async t=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,"0")).join("");
 const getUser=()=>{try{return localStorage.getItem("pyuser")}catch(e){return null}};
 const authed=()=>{const u=getUser();return!!(u&&USERS[u])};
-const free=k=>authed()||TOP[k][0]==2;
-const lockCard=(k,a)=>`<button class="card lock" data-unlock="${esc(TOP[k][1])}" aria-label="${esc(TOP[k][1])} (locked, log in to unlock)"><b>🔒 ${TOP[k][1]}</b><small>Log in to unlock</small></button>`;
-const limBanner=()=>authed()?"":`<div class="lim"><p><b>🔒 Limited access</b><br>You're using the free version: only <b>Module 2</b> is available. Log in to unlock Modules 3–5, mixed practice across all topics and the practice exam.</p><button class="btn p" data-unlock="">Log in to unlock everything</button></div>`;
+const full=()=>authed()||KEYEXP>Date.now();
+const free=k=>full()||TOP[k][0]==2;
+const lockCard=(k,a)=>`<button class="card lock" data-unlock="${esc(TOP[k][1])}" aria-label="${esc(TOP[k][1])} (locked, log in or use an access key to unlock)"><b>🔒 ${TOP[k][1]}</b><small>Log in or use a key to unlock</small></button>`;
+const limBanner=()=>full()?"":`<div class="lim"><p><b>🔒 Limited access</b><br>You're using the free version: only <b>Module 2</b> is available. Log in or enter an access key to unlock Modules 3–5, mixed practice across all topics and the practice exam.</p><button class="btn p" data-unlock="">Unlock everything</button></div>`;
 document.addEventListener("click",e=>{const b=e.target.closest("[data-unlock]");if(b){e.stopPropagation();loginPage(b.dataset.unlock)}},true);
+// ---- Access keys: signed by admin.html; only the public key lives here ----
+const KEYPUB="BO0yclBx5Vg_aiRUD_IWOcsKGzM6NOq8-WlGM-2Xscy8jFEARunsmYtnvZ8xP0k-SUaEUuAMBiK7K_O3fUPQPoQ";
+let KEYEXP=0;
+const ub64=s=>Uint8Array.from(atob(s.replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0));
+// Returns the expiry time (ms) of a genuine key, or 0 if the key is fake or malformed.
+async function verifyKey(k){try{const b=ub64(String(k).trim().replace(/^PY1-/i,""));if(b.length!=73||b[0]!=1)return 0;
+  const pk=await crypto.subtle.importKey("raw",ub64(KEYPUB),{name:"ECDSA",namedCurve:"P-256"},false,["verify"]);
+  return await crypto.subtle.verify({name:"ECDSA",hash:"SHA-256"},pk,b.slice(9),b.slice(0,9))?new DataView(b.buffer).getUint32(1)*1000:0}catch(e){return 0}}
+const fmtD=ms=>new Date(ms).toLocaleString(undefined,{dateStyle:"medium",timeStyle:"short"});
+function removeKey(){try{localStorage.removeItem("pykey")}catch(e){}KEYEXP=0;menu()}
 function logout(){try{localStorage.removeItem("pyuser")}catch(e){}menu()}
 function loginPage(what){$("#nav").innerHTML="";window.scrollTo(0,0);
-  A.innerHTML=`<form class="login" id="lf" novalidate><h1>🐍 Python Practice</h1><p class="mu">${what?`<b>${esc(what)}</b> is not part of the free version. `:""}Log in to unlock all modules. Module 2 is always free.</p>
+  A.innerHTML=`<form class="login" id="lf" novalidate><h1>🐍 Python Practice</h1><p class="mu">${what?`<b>${esc(what)}</b> is not part of the free version. `:""}Enter an access key or log in to unlock all modules. Module 2 is always free.</p>
+  ${KEYEXP>Date.now()?`<div class="trnote">🔑 Your access key gives full access until <b>${esc(fmtD(KEYEXP))}</b>. <button class="btn" type="button" id="kr" style="min-height:34px;padding:2px 10px;font-size:13px;margin-top:6px">Remove key</button></div>`:""}
+  <h2 style="margin-top:18px">Access key</h2>
+  <label for="lk">Enter your access key</label><input id="lk" autocomplete="off" spellcheck="false" placeholder="PY1-…">
+  <div class="lerr" id="kx" role="alert"></div><button class="btn p" type="button" id="kb">Use access key</button>
+  <h2 style="margin-top:22px">Or log in</h2>
   <label for="le">Email</label><input id="le" type="email" autocomplete="username" required>
   <label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password" required>
   <div class="lerr" id="lx" role="alert"></div><button class="btn p" type="submit">Log in</button><button class="ghost" type="button" id="lb">← Continue with the free version (Module 2)</button></form>`;
-  $("#lb").onclick=menu;
-  $("#le").focus();
+  $("#lb").onclick=menu;if($("#kr"))$("#kr").onclick=removeKey;
+  $("#lk").focus();
+  const useKey=async()=>{const k=$("#lk").value.trim();if(!k){$("#kx").textContent="Paste your access key first.";return}
+    const exp=await verifyKey(k);if(!exp){$("#kx").textContent="This access key is not valid.";return}
+    if(exp<=Date.now()){$("#kx").textContent="This access key expired on "+fmtD(exp)+".";return}
+    try{localStorage.setItem("pykey",k)}catch(e){}KEYEXP=exp;menu()};
+  $("#kb").onclick=useKey;$("#lk").onkeydown=e=>{if(e.key=="Enter"){e.preventDefault();useKey()}};
   $("#lf").onsubmit=async e=>{e.preventDefault();const em=$("#le").value.trim().toLowerCase(),pw=$("#lp").value;
     if(!em||!pw){$("#lx").textContent="Enter your email and password.";return}
     const h=USERS[em];if(h&&h===await sha256(pw)){try{localStorage.setItem("pyuser",em)}catch(e){}menu()}
     else{$("#lx").textContent="Incorrect email or password.";$("#lp").value="";$("#lp").focus()}}}
-G.forEach(a=>a.forEach(g=>{}));menu();
+G.forEach(a=>a.forEach(g=>{}));
+(async()=>{let k=null,fromUrl=false;try{const q=new URLSearchParams(location.search).get("key");if(q){k=q;fromUrl=true;history.replaceState(null,"",location.pathname+location.hash)}}catch(e){}
+  if(!k)try{k=localStorage.getItem("pykey")}catch(e){}
+  if(k){const exp=await verifyKey(k);if(exp>Date.now()){KEYEXP=exp;if(fromUrl)try{localStorage.setItem("pykey",k)}catch(e){}}
+    else if(!fromUrl)try{localStorage.removeItem("pykey")}catch(e){}}
+  menu()})();
 </script></body></html>
