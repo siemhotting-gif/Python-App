@@ -1,0 +1,13 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "claims": {
+      "$key": {
+        ".read": true,
+        ".write": "!data.exists()",
+        ".validate": "$key.length === 43 && newData.hasChildren(['d', 't']) && newData.child('d').isString() && newData.child('d').val().length <= 64 && newData.child('t').val() === now"
+      }
+    }
+  }
+}
